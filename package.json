@@ -1,0 +1,62 @@
+{
+  "name": "cygnix-seo-mcp",
+  "version": "1.0.0",
+  "description": "Free no-API-key SEO MCP server: keyword clustering, search intent, GSC cannibalization finder, title/meta CTR checker, content briefs. By Cygnix Labs.",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc && chmod +x dist/index.js",
+    "test": "npm run build && node --test test/",
+    "prepublishOnly": "npm test",
+    "start": "node dist/index.js"
+  },
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "model-context-protocol",
+    "seo",
+    "keyword-research",
+    "keyword-clustering",
+    "search-intent",
+    "keyword-cannibalization",
+    "google-search-console",
+    "meta-description",
+    "title-tag",
+    "content-brief",
+    "claude",
+    "cursor",
+    "ai-seo",
+    "cygnix"
+  ],
+  "author": "Cygnix Labs <cygnixlabs@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.1",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "typescript": "^5.9.3"
+  },
+  "mcpName": "io.github.cygnixlabs-cmd/cygnix-seo-mcp",
+  "type": "module",
+  "bin": {
+    "cygnix-seo-mcp": "dist/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "server.json"
+  ],
+  "homepage": "https://github.com/cygnixlabs-cmd/cygnix-seo-mcp#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cygnixlabs-cmd/cygnix-seo-mcp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/cygnixlabs-cmd/cygnix-seo-mcp/issues"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

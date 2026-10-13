@@ -1,0 +1,9 @@
+# Smithery config: local stdio server, no configuration or API keys needed.
+startCommand:
+  type: stdio
+  configSchema:
+    type: object
+    properties: {}
+  commandFunction: |-
+    (config) => ({ command: 'npx', args: ['-y', 'cygnix-seo-mcp'] })
+  exampleConfig: {}

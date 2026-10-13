@@ -1,0 +1,12 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json",
+  "name": "io.github.cygnixlabs-cmd/cygnix-seo-mcp",
+  "title": "Cygnix SEO",
+  "description": "No-API-key SEO tools: keyword clustering, search intent, GSC cannibalization, title/meta CTR checks, content briefs.",
+  "repository": { "url": "https://github.com/cygnixlabs-cmd/cygnix-seo-mcp", "source": "github" },
+  "websiteUrl": "https://cygnixlabs.com",
+  "version": "1.0.0",
+  "packages": [
+    { "registryType": "npm", "identifier": "cygnix-seo-mcp", "version": "1.0.0", "transport": { "type": "stdio" } }
+  ]
+}
