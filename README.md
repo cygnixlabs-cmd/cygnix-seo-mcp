@@ -83,11 +83,11 @@ Need more than the free tools? These run in the cloud on Apify. You pay per resu
 
 | Tool | What it does | Price |
 |---|---|---|
-| [AEO & AI Search Readiness Checker](https://apify.com/cygnix_labs/aeo-readiness-checker) | Scores pages 0-100 for ChatGPT, Perplexity and AI Overviews: schema, answer-first content, FAQ, llms.txt, GPTBot/ClaudeBot access | $3 / 1,000 pages |
-| [SERP Intent Mapper](https://apify.com/cygnix_labs/serp-intent-mapper) | Search intent + page type for every keyword | $0.50 / 1,000 keywords |
-| [Keyword Clusterer + Content Brief](https://apify.com/cygnix_labs/keyword-clusterer-brief) | Topic clusters, pillar keywords, content briefs | $1 / 1,000 keywords + $0.02 / brief |
-| [Keyword Cannibalization Finder](https://apify.com/cygnix_labs/keyword-cannibalization-finder) | Pages competing for the same query, from a GSC export | $0.01 / issue found |
-| [Content Decay Audit](https://apify.com/cygnix_labs/content-decay-audit) | Pages losing Google traffic, ranked by clicks lost, with refresh plans | $1 / 1,000 pages |
+| [AEO & AI Search Readiness Checker](https://apify.com/cygnix_labs/aeo-readiness-checker) | Scores pages 0-100 for ChatGPT, Perplexity and AI Overviews: schema, answer-first content, FAQ, llms.txt, GPTBot/ClaudeBot access | 5 pages/run free, then $2 / 1,000 pages |
+| [SERP Intent Mapper](https://apify.com/cygnix_labs/serp-intent-mapper) | Search intent + page type for every keyword | 100 keywords/run free, then $0.50 / 1,000 |
+| [Keyword Clusterer + Content Brief](https://apify.com/cygnix_labs/keyword-clusterer-brief) | Topic clusters, pillar keywords, content briefs | 100 keywords/run free, then $0.70 / 1,000 + $0.01 / brief |
+| [Keyword Cannibalization Finder](https://apify.com/cygnix_labs/keyword-cannibalization-finder) | Pages competing for the same query, from a GSC export | 3 issues/run free, then $0.007 / issue |
+| [Content Decay Audit](https://apify.com/cygnix_labs/content-decay-audit) | Pages losing Google traffic, ranked by clicks lost, with refresh plans | 25 pages/run free, then $1 / 1,000 pages |
 
 Full agent skills (Claude Code / Cursor SKILL.md packs): **[Cygnix Labs on Agensi](https://www.agensi.io/creators/cygnix-labs)**
 
