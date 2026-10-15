@@ -78,6 +78,19 @@ Action: Pick https://site.com/a as canonical target; merge/301 or de-optimize th
 - Title pixel widths are approximations of Google's SERP rendering.
 - No tool estimates search volume or difficulty. Use your own data source for that.
 
+## Paid pro tools
+Need more than the free tools? These run in the cloud on Apify. You pay per result, and Claude, ChatGPT and Cursor agents can call them through the [Apify MCP server](https://mcp.apify.com):
+
+| Tool | What it does | Price |
+|---|---|---|
+| [AEO & AI Search Readiness Checker](https://apify.com/cygnix_labs/aeo-readiness-checker) | Scores pages 0-100 for ChatGPT, Perplexity and AI Overviews: schema, answer-first content, FAQ, llms.txt, GPTBot/ClaudeBot access | $3 / 1,000 pages |
+| [SERP Intent Mapper](https://apify.com/cygnix_labs/serp-intent-mapper) | Search intent + page type for every keyword | $0.50 / 1,000 keywords |
+| [Keyword Clusterer + Content Brief](https://apify.com/cygnix_labs/keyword-clusterer-brief) | Topic clusters, pillar keywords, content briefs | $1 / 1,000 keywords + $0.02 / brief |
+| [Keyword Cannibalization Finder](https://apify.com/cygnix_labs/keyword-cannibalization-finder) | Pages competing for the same query, from a GSC export | $0.01 / issue found |
+| [Content Decay Audit](https://apify.com/cygnix_labs/content-decay-audit) | Pages losing Google traffic, ranked by clicks lost, with refresh plans | $1 / 1,000 pages |
+
+Full agent skills (Claude Code / Cursor SKILL.md packs): **[Cygnix Labs on Agensi](https://www.agensi.io/creators/cygnix-labs)**
+
 ## Want the full workflow?
 These tools are the free starter layer of the **Cygnix SEO Toolkit**: full agent skills, prompts and sheets for keyword research → briefs → audits → content refresh.
 
