@@ -73,6 +73,10 @@ Action: Pick https://site.com/a as canonical target; merge/301 or de-optimize th
 
 **Getting GSC data:** Search Console → Performance → Search results → add the *Page* dimension alongside *Query* (or use the Looker Studio / API export) → Export CSV → paste the text.
 
+## More Cygnix SEO tools
+
+Free agent skills (`npx skills add cygnixlabs-cmd/cygnix-seo-skills`), pay-per-use Apify actors for full-site SEO + AEO/GEO audits, and the rest of the toolkit: [Cygnix Labs tool directory](https://cygnixlabs-cmd.github.io/cygnix-seo-skills/).
+
 ## Honest limits
 - Intent and clustering are rule-based/lexical, so treat them as a fast first pass and confirm with the live SERP.
 - Title pixel widths are approximations of Google's SERP rendering.
