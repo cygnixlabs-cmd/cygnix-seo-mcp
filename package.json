@@ -27,7 +27,7 @@
     "ai-seo",
     "cygnix"
   ],
-  "author": "Cygnix Labs <cygnixlabs@gmail.com>",
+  "author": "Cygnix Labs <info@cygnixlabs.com>",
   "license": "MIT",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.32.1",
