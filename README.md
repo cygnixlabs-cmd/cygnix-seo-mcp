@@ -71,7 +71,11 @@ node dist/index.js
 Action: Pick https://site.com/a as canonical target; merge/301 or de-optimize the others...
 ```
 
-**Getting GSC data:** Search Console → Performance → Search results → add the *Page* dimension alongside *Query* (or use the Looker Studio / API export) → Export CSV → paste the text.
+**GSC input contract (cannibalization):** each CSV row must be one **query–page pair**, with columns for `query`, `page`, `clicks`, `impressions` and `position` (header names are matched loosely). Separate Queries-only and Pages-only aggregate exports cannot be joined to recover those pairs. Example file: [gsc-query-page.csv](https://github.com/cygnixlabs-cmd/cygnix-seo-skills/blob/main/examples/gsc-query-page.csv).
+
+**How to get that export:**
+- Prefer Looker Studio or the Search Console API, which can export query + page together.
+- In the Search Console UI, dimensions are one at a time ([Google’s filtering docs](https://support.google.com/webmasters/answer/17011165?hl=en); [export docs](https://support.google.com/webmasters/answer/7576553?hl=en)). Manual route for selected-query coverage (not a full site-wide export): open Performance → Search results → click one query to filter → switch the dimension to Pages → Export → add that exact query as a column on every row. Repeat for the queries you care about, keep date/search-type filters the same, and append the rows.
 
 ## More Cygnix SEO tools
 
