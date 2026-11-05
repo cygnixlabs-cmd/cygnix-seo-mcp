@@ -4,7 +4,7 @@
 
 **5 no-API-key SEO tools** that work on *your* data: paste keywords, a Google Search Console export or your titles, and get clusters, intent, cannibalization fixes, CTR checks and content briefs. Everything is deterministic and runs locally. No accounts, no tracking, and no made-up search volumes.
 
-Built by **[Cygnix Labs](https://cygnixlabs.com)**.
+Built by **[Cygnix Labs](https://cygnixlabs.com)**. Done-for-you SEO + AEO service: **[skills.cygnixlabs.com](https://skills.cygnixlabs.com/)**.
 
 | Tool | What it does |
 |---|---|
@@ -107,6 +107,7 @@ These tools are the free starter layer of the **Cygnix SEO Toolkit**: full agent
 - 🔎 [SEO Toolkit Vol. 1: Keyword Research → Content Refresh (Agensi)](https://www.agensi.io/bundles/seo-toolkit-keyword-research-to-content-refresh)
 - 🛠️ [SEO Toolkit Vol. 2: Audit & Fix Pack (Agensi)](https://www.agensi.io/bundles/seo-toolkit-vol-2-audit-fix-pack)
 - 📦 [SEO Operator Bundle (Gumroad)](https://cygnixlabs.gumroad.com/l/seo-operator-bundle)
+- 🛠️ [Done-for-you SEO + AEO service](https://skills.cygnixlabs.com/) (free first audit)
 - 👤 [All Cygnix Labs skills on Agensi](https://www.agensi.io/creators/cygnix-labs) · [Gumroad store](https://cygnixlabs.gumroad.com) · [Medium](https://medium.com/@cygnixlabs) · [X](https://x.com/cygnixlabs)
 
 ## Keywords
