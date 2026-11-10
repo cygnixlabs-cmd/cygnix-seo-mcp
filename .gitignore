@@ -2,3 +2,7 @@ node_modules
 dist
 *.log
 .npmrc
+.data
+.wrangler
+.dev.vars
+.env
