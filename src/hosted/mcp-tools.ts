@@ -1,6 +1,7 @@
 // Hosted-only MCP tools: account status, Google Search Console, AEO / llms.txt, white-label PDF reports.
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
+import { ANNOTATIONS } from "../annotations.js";
 import type { Principal } from "./auth.js";
 import type { Store } from "./store.js";
 import { periodOf, periodResetIso } from "./store.js";
@@ -21,7 +22,7 @@ const daysAgo = (n: number) => new Date(Date.now() - n * 86400_000).toISOString(
 
 export function registerHostedTools(server: McpServer, c: ToolCtx) {
   const tier = TIERS[c.principal.tier];
-  server.tool("account_status", "Show this Cygnix API key's plan, monthly tool-call usage, limits and upgrade options.", {}, guard(async () => {
+  server.tool("account_status", "Show this Cygnix API key's plan, monthly tool-call usage, limits and upgrade options.", {}, ANNOTATIONS["account_status"], guard(async () => {
     const used = await c.store.accountUsage(c.principal.accountId); const nt = nextTier(tier.id);
     const g = await c.store.google(c.principal.keyId);
     return [`Plan: ${tier.name} ($${tier.priceUsdMonthly}/mo)`, `Usage ${periodOf()}: ${used} / ${tier.monthlyCalls} tool calls (resets ${periodResetIso()})`,
@@ -31,9 +32,9 @@ export function registerHostedTools(server: McpServer, c: ToolCtx) {
 
   // ---- AEO / AI search ----
   server.tool("check_ai_search_readiness", "AEO / AI-search visibility audit for one public URL: checks whether ChatGPT search, Claude, Perplexity, Copilot and Google AI Overviews crawlers are allowed, plus schema, answer-ready structure, server-rendered text, freshness and llms.txt. Returns a 0-100 score and prioritized fixes.",
-    { url: z.string().describe("Public page URL, e.g. https://example.com/pricing") }, guard(async ({ url }) => (await runAeoCheck(c.webFetch, url)).markdown));
+    { url: z.string().describe("Public page URL, e.g. https://example.com/pricing") }, ANNOTATIONS["check_ai_search_readiness"], guard(async ({ url }) => (await runAeoCheck(c.webFetch, url)).markdown));
   server.tool("check_llms_txt", "Check a site's /llms.txt (and /llms-full.txt) against the llmstxt.org format: H1, summary, sections, link syntax, absolute URLs, descriptions. Returns issues or a starter file.",
-    { url: z.string().describe("Any URL on the site; the origin is used") }, guard(async ({ url }) => runLlmsCheck(c.webFetch, url)));
+    { url: z.string().describe("Any URL on the site; the origin is used") }, ANNOTATIONS["check_llms_txt"], guard(async ({ url }) => runLlmsCheck(c.webFetch, url)));
 
   // ---- Google Search Console (only when Google OAuth is configured) ----
   if (googleConfigured(c.env)) {
@@ -41,9 +42,9 @@ export function registerHostedTools(server: McpServer, c: ToolCtx) {
     const gsc = <A>(f: (a: A) => Promise<string>) => async (a: A) => { try { return text(await f(a)); } catch (e) {
       if (e instanceof GoogleError && e.code === "not_connected") return fail(`${e.message}\nConnect link: ${await connectUrl(c.env, c.principal.keyId)}`);
       return fail(`Error: ${(e as Error).message}`); } };
-    server.tool("gsc_connect", "Get a one-click link to connect Google Search Console (read-only) to this Cygnix key. Open it, approve, then use the gsc_* tools.", {},
+    server.tool("gsc_connect", "Get a one-click link to connect Google Search Console (read-only) to this Cygnix key. Open it, approve, then use the gsc_* tools.", {}, ANNOTATIONS["gsc_connect"],
       guard(async () => `Open this link to connect Google Search Console (read-only, revocable any time):\n${await connectUrl(c.env, c.principal.keyId)}\n\nThe link expires in 15 minutes.`));
-    server.tool("gsc_list_sites", "List the Search Console properties the connected Google account can read.", {}, gsc(async () => {
+    server.tool("gsc_list_sites", "List the Search Console properties the connected Google account can read.", {}, ANNOTATIONS["gsc_list_sites"], gsc(async () => {
       const r = await g.listSites(c.principal.keyId); const s = r.siteEntry ?? [];
       return s.length ? `| Property | Permission |\n|---|---|\n${s.map(x => `| ${x.siteUrl} | ${x.permissionLevel} |`).join("\n")}` : "No Search Console properties found for this Google account.";
     }));
@@ -51,7 +52,7 @@ export function registerHostedTools(server: McpServer, c: ToolCtx) {
       { site_url: z.string().describe("Property exactly as listed by gsc_list_sites, e.g. sc-domain:example.com or https://example.com/"),
         start_date: z.string().optional().describe("YYYY-MM-DD, default 28 days ago"), end_date: z.string().optional().describe("YYYY-MM-DD, default 2 days ago"),
         dimensions: z.array(z.enum(["query", "page", "country", "device", "date", "searchAppearance"])).max(3).optional(),
-        query_contains: z.string().optional(), page_contains: z.string().optional(), row_limit: z.number().int().min(1).max(1000).optional() },
+        query_contains: z.string().optional(), page_contains: z.string().optional(), row_limit: z.number().int().min(1).max(1000).optional() }, ANNOTATIONS["gsc_search_analytics"],
       gsc(async a => {
         const filters = [a.query_contains && { dimension: "query", operator: "contains", expression: a.query_contains }, a.page_contains && { dimension: "page", operator: "contains", expression: a.page_contains }].filter(Boolean);
         const dims = a.dimensions ?? ["query"];
@@ -61,7 +62,7 @@ export function registerHostedTools(server: McpServer, c: ToolCtx) {
         return `| ${dims.join(" | ")} | Clicks | Impr. | CTR | Pos. |\n|${"---|".repeat(dims.length + 4)}\n` + rows.map(x => `| ${x.keys.join(" | ")} | ${x.clicks} | ${x.impressions} | ${(x.ctr * 100).toFixed(1)}% | ${x.position.toFixed(1)} |`).join("\n");
       }));
     server.tool("gsc_find_cannibalization", "Pull live query+page data from Search Console and list queries where 2+ of your pages compete, with a keep/merge suggestion.",
-      { site_url: z.string(), days: z.number().int().min(7).max(480).optional(), min_impressions: z.number().int().min(0).optional() },
+      { site_url: z.string(), days: z.number().int().min(7).max(480).optional(), min_impressions: z.number().int().min(0).optional() }, ANNOTATIONS["gsc_find_cannibalization"],
       gsc(async a => {
         const r = await g.searchAnalytics(c.principal.keyId, a.site_url, { startDate: daysAgo((a.days ?? 90) + 2), endDate: daysAgo(2), dimensions: ["query", "page"], rowLimit: 25000 });
         const csv = "query,page,clicks,impressions,position\n" + (r.rows ?? []).map(x => [csvq(x.keys[0]), csvq(x.keys[1]), x.clicks, x.impressions, x.position.toFixed(1)].join(",")).join("\n");
@@ -70,26 +71,26 @@ export function registerHostedTools(server: McpServer, c: ToolCtx) {
         return `# Live cannibalization: ${a.site_url} (last ${a.days ?? 90} days)\n\n` + res.slice(0, 50).map(x => `## ${x.query} (${x.severity})\n${x.pages.map(p => `- ${p.page}: ${p.clicks} clicks, ${p.impr} impr., pos ${p.pos.toFixed(1)}`).join("\n")}\nAction: ${x.action}`).join("\n\n");
       }));
     server.tool("gsc_inspect_url", "Inspect one URL with the Search Console URL Inspection API: index status, coverage, canonical, last crawl, mobile usability.",
-      { site_url: z.string(), url: z.string() }, gsc(async a => {
+      { site_url: z.string(), url: z.string() }, ANNOTATIONS["gsc_inspect_url"], gsc(async a => {
         const r = await g.inspectUrl(c.principal.keyId, a.site_url, a.url); const i = r.inspectionResult?.indexStatusResult ?? {};
         return [`URL: ${a.url}`, `Verdict: ${i.verdict ?? "?"}`, `Coverage: ${i.coverageState ?? "?"}`, `Indexing state: ${i.indexingState ?? "?"}`, `Robots.txt: ${i.robotsTxtState ?? "?"}`,
           `Last crawl: ${i.lastCrawlTime ?? "?"} (${i.crawledAs ?? "?"})`, `Google canonical: ${i.googleCanonical ?? "?"}`, `User canonical: ${i.userCanonical ?? "?"}`].join("\n");
       }));
-    server.tool("gsc_disconnect", "Disconnect Google Search Console from this key and revoke the stored token.", {}, guard(async () => (await g.disconnect(c.principal.keyId)) ? "Disconnected and revoked." : "Nothing was connected."));
+    server.tool("gsc_disconnect", "Disconnect Google Search Console from this key and revoke the stored token.", {}, ANNOTATIONS["gsc_disconnect"], guard(async () => (await g.disconnect(c.principal.keyId)) ? "Disconnected and revoked." : "Nothing was connected."));
   }
 
   // ---- White-label reports (Agency) ----
   const agencyOnly = () => tier.whiteLabelReports ? null : fail(`White-label PDF reports are part of the Agency plan ($99/mo). Upgrade: ${upgradeUrl(c.env)}`);
   server.tool("set_report_branding", "Agency plan: set the white-label branding used on PDF reports (agency name, logo URL, colours, footer).",
     { agency_name: z.string().min(1).max(80), logo_url: z.string().url().optional().describe("Public PNG or JPG"), primary_color: z.string().optional().describe("#RRGGBB"),
-      accent_color: z.string().optional().describe("#RRGGBB"), footer_text: z.string().max(140).optional(), website: z.string().max(120).optional() },
+      accent_color: z.string().optional().describe("#RRGGBB"), footer_text: z.string().max(140).optional(), website: z.string().max(120).optional() }, ANNOTATIONS["set_report_branding"],
     async a => { const d = agencyOnly(); if (d) return d;
       if ((a.primary_color && !validColor(a.primary_color)) || (a.accent_color && !validColor(a.accent_color))) return fail("Colours must be #RRGGBB.");
       if (a.logo_url) { try { assertPublicUrl(a.logo_url); } catch (e) { return fail((e as Error).message); } }
       await c.store.saveBranding(c.principal.accountId, { agency_name: a.agency_name, logo_url: a.logo_url ?? null, primary_color: a.primary_color ?? "#1F3A5F", accent_color: a.accent_color ?? "#F2A541", footer_text: a.footer_text ?? null, website: a.website ?? null });
       return text(`Branding saved for ${a.agency_name}. New reports from any key on this account will use it.`); });
   server.tool("create_white_label_report", "Agency plan: turn Markdown (e.g. the output of other Cygnix tools) into a client-ready PDF with your agency's logo, colours and name. Returns a private download link valid 30 days.",
-    { title: z.string().min(1).max(90), client_name: z.string().max(80).optional(), content_markdown: z.string().min(1).max(200_000) },
+    { title: z.string().min(1).max(90), client_name: z.string().max(80).optional(), content_markdown: z.string().min(1).max(200_000) }, ANNOTATIONS["create_white_label_report"],
     async a => { const d = agencyOnly(); if (d) return d;
       try {
         const b = await c.store.branding(c.principal.accountId);

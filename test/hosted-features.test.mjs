@@ -120,3 +120,26 @@ test("PDF renderer handles non-Latin text without throwing", async () => {
   const pdf = await renderReportPdf({ branding: { agency_name: "A", primary_color: "#000000", accent_color: "#ffffff" }, title: "T ✓", markdown: "# 日本語\n- ✓ done" });
   assert.ok(pdf.length > 500);
 });
+
+test("every tool has a title and explicit read-only/destructive/open-world hints (directory requirement)", async () => {
+  const { randomBytes } = await import("node:crypto");
+  const { signup, rpc, req } = makeApp({ GOOGLE_CLIENT_ID: "g", GOOGLE_CLIENT_SECRET: "s", TOKEN_ENCRYPTION_KEY: randomBytes(32).toString("base64") });
+  const s = await signup();
+  const tools = (await rpc(s.api_key, "tools/list")).body.result.tools;
+  assert.equal(tools.length, 16);
+  for (const t of tools) {
+    assert.ok(t.annotations?.title, `${t.name} title`);
+    for (const h of ["readOnlyHint", "destructiveHint", "openWorldHint"]) assert.equal(typeof t.annotations[h], "boolean", `${t.name} ${h}`);
+    assert.ok(t.name.length <= 64);
+  }
+  assert.equal(tools.find(t => t.name === "gsc_disconnect").annotations.destructiveHint, true);
+  const card = await (await req("/.well-known/mcp/server-card.json")).json();
+  assert.equal(card.tools.length, 16); assert.equal(card.authentication.required, true);
+});
+
+test("without Google OAuth the server instructions say Search Console is coming soon", async () => {
+  const { signup, rpc } = makeApp();
+  const s = await signup();
+  const init = await rpc(s.api_key, "initialize", { protocolVersion: "2025-06-18", capabilities: {}, clientInfo: { name: "t", version: "1" } });
+  assert.match(init.body.result.instructions, /coming soon/);
+});

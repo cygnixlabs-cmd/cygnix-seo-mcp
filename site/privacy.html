@@ -13,7 +13,7 @@
 <li><strong>API keys:</strong> stored only as one-way SHA-256 hashes, plus a short prefix for display. We cannot recover a lost key; you rotate it instead.</li>
 <li><strong>Usage metering:</strong> counts of tool calls per key per month and short-lived per-minute counters, used for quotas, rate limits and billing.</li>
 <li><strong>Tool inputs and outputs:</strong> processed in memory to produce the result and <em>not stored</em>. The exception is white-label PDF reports you create on purpose, which are stored for 30 days so the private link works.</li>
-<li><strong>Google Search Console (optional):</strong> if you connect it, we store an OAuth refresh token encrypted with AES-256-GCM, plus the granted scope (<code>webmasters.readonly</code>). Search Console data is fetched when you run a tool and not retained.</li>
+<li><strong>Google Search Console (optional, coming soon):</strong> when this feature is available and you connect it, we store an OAuth refresh token encrypted with AES-256-GCM, plus the granted scope (<code>webmasters.readonly</code>). Search Console data is fetched when you run a tool and not retained.</li>
 <li><strong>Branding (Agency):</strong> agency name, logo URL, colours and footer text you provide.</li>
 <li><strong>Billing:</strong> payments are handled by PayPal, Whop or Stripe. We receive a subscription ID, customer ID, plan and status. We never see or store card numbers.</li>
 <li><strong>Technical logs:</strong> our host (Cloudflare) processes IP addresses and request metadata for security and abuse prevention. We use IP addresses to rate-limit signups.</li>

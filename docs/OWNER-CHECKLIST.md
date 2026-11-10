@@ -51,7 +51,8 @@ Why Whop over Lemon Squeezy: Lemon Squeezy is moving merchants to Stripe Managed
 - [ ] Turn on the Customer Billing Portal (Settings → Billing → Customer portal) so `/v1/billing/manage` works.
 - Optional: Stripe Managed Payments as merchant of record for VAT/sales tax (research-plan.md).
 
-## 6. Google Search Console OAuth (the one-click GSC connection)
+## 6. Google Search Console OAuth (the one-click GSC connection) — AFTER launch
+Launch without it: leave `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` unset so the `gsc_*` tools stay hidden and the site says "coming soon". Start the steps below now, because Google verification takes time.
 - [ ] console.cloud.google.com → new project "Cygnix SEO MCP" → **APIs & Services → Library**: enable **Google Search Console API**.
 - [ ] **OAuth consent screen / Google Auth Platform:** User type **External**. App name "Cygnix SEO MCP", support email, logo, home page `https://mcp.cygnixlabs.com`, privacy `https://mcp.cygnixlabs.com/privacy.html`, terms `https://mcp.cygnixlabs.com/terms.html`, authorized domain `cygnixlabs.com`. Verify domain ownership in Google Search Console with the same Google account.
 - [ ] Scopes: add only `https://www.googleapis.com/auth/webmasters.readonly`.

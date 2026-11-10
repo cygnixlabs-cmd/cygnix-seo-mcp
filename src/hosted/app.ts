@@ -14,7 +14,7 @@ import { GoogleClient, GoogleError, connectUrl, googleConfigured, googleMissing 
 
 export const QUOTA_EXCEEDED = -32029;
 export const RATE_LIMITED = -32028;
-const INSTRUCTIONS = "Cygnix SEO tools: keyword clustering, search intent, cannibalization (pasted CSV or live Google Search Console), title/meta CTR checks, content briefs, AI-search (AEO) readiness and llms.txt audits, and white-label PDF reports on the Agency plan. Each tools/call counts toward the key's monthly quota; call account_status to see usage.";
+const instructions = (gsc: boolean) => `Cygnix SEO tools: keyword clustering, search intent, keyword cannibalization (${gsc ? "pasted CSV or live Google Search Console via gsc_* tools" : "from a pasted Search Console CSV export; live Search Console connection is coming soon"}), title/meta CTR checks, content briefs, AI-search (AEO) readiness and llms.txt audits, and white-label PDF reports on the Agency plan. Each tools/call counts toward the key's monthly quota; call account_status to see usage.`;
 
 type JsonRpc = { jsonrpc?: string; id?: string | number | null; method?: string };
 const rpcError = (id: JsonRpc["id"], code: number, message: string, data: Record<string, unknown>) => ({ jsonrpc: "2.0", id: id ?? null, error: { code, message, data } });
@@ -72,7 +72,7 @@ export function createApp(deps: AppDeps) {
       }
     }
     await store.touchKey(p.keyId);
-    const server = createSeoServer({ instructions: INSTRUCTIONS });
+    const server = createSeoServer({ instructions: instructions(googleConfigured(env)) });
     registerHostedTools(server, { principal: p, store, env, fetchImpl, webFetch });
     const transport = new WebStandardStreamableHTTPServerTransport({ sessionIdGenerator: undefined, enableJsonResponse: true });
     await server.connect(transport);
@@ -154,6 +154,7 @@ export function createApp(deps: AppDeps) {
     if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: CORS_HEADERS });
     if (path === "/mcp") return mcp(req);
     if (path === "/health") return json({ ok: true, version: SERVER_VERSION, billing: Object.fromEntries(PROVIDER_ORDER.map(id => [id, billing[id].missingEnv().length === 0])), google_oauth: googleConfigured(env) });
+    if (path === "/.well-known/mcp/server-card.json") return json(await serverCard());
     if (path.startsWith("/.well-known/oauth-protected-resource")) return json(oauth.protectedResourceMetadata(env));
     if (path.startsWith("/.well-known/oauth-authorization-server") || path.startsWith("/.well-known/openid-configuration")) return json(oauth.authServerMetadata(env));
     if (path === "/oauth/register" && req.method === "POST") return oauth.register(req, store);
@@ -185,6 +186,22 @@ export function createApp(deps: AppDeps) {
       if (path === "/v1/google" && req.method === "DELETE") return json({ disconnected: await new GoogleClient(env, store, fetchImpl).disconnect(p.keyId) });
     }
     return apiError(404, "not_found", "Not found");
+  }
+  /** Static metadata (SEP-1649 server card) so directory scanners can list tools without an API key. */
+  let card: unknown = null;
+  async function serverCard() {
+    if (card) return card;
+    const { Client } = await import("@modelcontextprotocol/sdk/client/index.js");
+    const { InMemoryTransport } = await import("@modelcontextprotocol/sdk/inMemory.js");
+    const server = createSeoServer({ instructions: instructions(googleConfigured(env)) });
+    const demo: Principal = { accountId: "card", keyId: "card", tier: "agency", email: "card@local", status: "active", via: "api_key", account: {} as never };
+    registerHostedTools(server, { principal: demo, store, env, fetchImpl, webFetch });
+    const [a, b] = InMemoryTransport.createLinkedPair(); await server.connect(a);
+    const client = new Client({ name: "card", version: "1" }); await client.connect(b);
+    const { tools } = await client.listTools(); await client.close(); await server.close();
+    card = { serverInfo: { name: "Cygnix SEO MCP", version: SERVER_VERSION }, authentication: { required: true, schemes: ["oauth2", "bearer"] },
+      documentation: `${base()}/connect.html`, tools, resources: [], prompts: [] };
+    return card;
   }
   async function googleCallback(url: URL) {
     const html = (t: string, s = 200) => new Response(`<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="/styles.css"><body class="auth"><main class="card">${t}</main>`, { status: s, headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" } });

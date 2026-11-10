@@ -11,7 +11,7 @@ export interface Tier {
 }
 const plan = (t: string) => ({ paypal: `PAYPAL_PLAN_${t}`, whop: `WHOP_PLAN_${t}`, stripe: `STRIPE_PRICE_${t}` });
 export const TIERS: Record<TierId, Tier> = {
-  free:   { id: "free",   name: "Free",   priceUsdMonthly: 0,  monthlyCalls: 300,     perMinute: 10,  maxKeys: 1,  whiteLabelReports: false, blurb: "Every tool, including Search Console and AI-search checks. 300 calls a month." },
+  free:   { id: "free",   name: "Free",   priceUsdMonthly: 0,  monthlyCalls: 300,     perMinute: 10,  maxKeys: 1,  whiteLabelReports: false, blurb: "Every tool, including AI-search and llms.txt checks. 300 calls a month." },
   pro:    { id: "pro",    name: "Pro",    priceUsdMonthly: 15, monthlyCalls: 5_000,   perMinute: 60,  maxKeys: 3,  whiteLabelReports: false, planEnv: plan("PRO"),    blurb: "Solo SEOs and site owners." },
   growth: { id: "growth", name: "Growth", priceUsdMonthly: 39, monthlyCalls: 25_000,  perMinute: 120, maxKeys: 10, whiteLabelReports: false, planEnv: plan("GROWTH"), blurb: "In-house teams and power users." },
   agency: { id: "agency", name: "Agency", priceUsdMonthly: 99, monthlyCalls: 100_000, perMinute: 300, maxKeys: 50, whiteLabelReports: true,  planEnv: plan("AGENCY"), blurb: "Agencies: one key per client, pooled quota, white-label PDF reports." },

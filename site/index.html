@@ -1,8 +1,8 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Cygnix SEO MCP: Search Console, AEO and SEO tools for Claude and ChatGPT</title><meta name="description" content="Remote SEO MCP server: live Google Search Console, AI-search (AEO) and llms.txt checks, keyword clustering, briefs and white-label PDF reports. Free tier; Pro $15, Growth $39, Agency $99."><link rel="canonical" href="https://mcp.cygnixlabs.com/">
-<meta property="og:title" content="Cygnix SEO MCP: Search Console, AEO and SEO tools for Claude and ChatGPT"><meta property="og:description" content="Remote SEO MCP server: live Google Search Console, AI-search (AEO) and llms.txt checks, keyword clustering, briefs and white-label PDF reports. Free tier; Pro $15, Growth $39, Agency $99."><meta property="og:type" content="website">
-<link rel="stylesheet" href="/styles.css"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","name":"Cygnix Labs","url":"https://skills.cygnixlabs.com","email":"info@cygnixlabs.com"},{"@type":"SoftwareApplication","name":"Cygnix SEO MCP","applicationCategory":"BusinessApplication","operatingSystem":"Web","url":"https://mcp.cygnixlabs.com","offers":[{"@type":"Offer","name":"Free","price":"0","priceCurrency":"USD"},{"@type":"Offer","name":"Pro","price":"15","priceCurrency":"USD"},{"@type":"Offer","name":"Growth","price":"39","priceCurrency":"USD"},{"@type":"Offer","name":"Agency","price":"99","priceCurrency":"USD"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Which AI apps does Cygnix SEO MCP work with?","acceptedAnswer":{"@type":"Answer","text":"Claude (custom connectors and Claude Code), ChatGPT (developer mode connectors), Cursor, VS Code and any client that supports remote MCP over Streamable HTTP."}},{"@type":"Question","name":"What counts as a call?","acceptedAnswer":{"@type":"Answer","text":"One tool run (tools/call). Connecting, listing tools and pings are free. Quotas reset on the 1st of each month (UTC)."}},{"@type":"Question","name":"Is my Search Console data stored?","acceptedAnswer":{"@type":"Answer","text":"No. We store only an encrypted, revocable Google refresh token. Search Console data is fetched when a tool runs and is not kept."}}]}]}</script></head><body>
+<title>Cygnix SEO MCP: AEO and SEO tools for Claude and ChatGPT</title><meta name="description" content="Remote SEO MCP server: AI-search (AEO) and llms.txt checks, keyword clustering, cannibalization, titles, briefs and white-label PDF reports. Live Search Console coming soon. Free tier; Pro $15, Growth $39, Agency $99."><link rel="canonical" href="https://mcp.cygnixlabs.com/">
+<meta property="og:title" content="Cygnix SEO MCP: AEO and SEO tools for Claude and ChatGPT"><meta property="og:description" content="Remote SEO MCP server: AI-search (AEO) and llms.txt checks, keyword clustering, cannibalization, titles, briefs and white-label PDF reports. Live Search Console coming soon. Free tier; Pro $15, Growth $39, Agency $99."><meta property="og:type" content="website">
+<link rel="stylesheet" href="/styles.css"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","name":"Cygnix Labs","url":"https://skills.cygnixlabs.com","email":"info@cygnixlabs.com"},{"@type":"SoftwareApplication","name":"Cygnix SEO MCP","applicationCategory":"BusinessApplication","operatingSystem":"Web","url":"https://mcp.cygnixlabs.com","offers":[{"@type":"Offer","name":"Free","price":"0","priceCurrency":"USD"},{"@type":"Offer","name":"Pro","price":"15","priceCurrency":"USD"},{"@type":"Offer","name":"Growth","price":"39","priceCurrency":"USD"},{"@type":"Offer","name":"Agency","price":"99","priceCurrency":"USD"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Which AI apps does Cygnix SEO MCP work with?","acceptedAnswer":{"@type":"Answer","text":"Claude (custom connectors and Claude Code), ChatGPT (developer mode connectors), Cursor, VS Code and any client that supports remote MCP over Streamable HTTP."}},{"@type":"Question","name":"What counts as a call?","acceptedAnswer":{"@type":"Answer","text":"One tool run (tools/call). Connecting, listing tools and pings are free. Quotas reset on the 1st of each month (UTC)."}},{"@type":"Question","name":"Does it connect to Google Search Console?","acceptedAnswer":{"@type":"Answer","text":"A live, read-only Search Console connection is coming soon. Today you can paste a Search Console export into the cannibalization tool."}}]}]}</script></head><body>
 <div class="draft">Draft, pending legal review. Cygnix Labs LLC is being formed. Paid plans open when billing goes live.</div>
 <header class="top"><div class="wrap"><a class="logo" href="/">Cygnix<span>.</span> SEO MCP</a><nav><a href="/#tools">Tools</a><a href="/#pricing">Pricing</a><a href="/connect.html">Connect</a><a href="https://skills.cygnixlabs.com">Skills</a><a class="btn" href="/#signup">Get a free key</a></nav></div></header>
 
@@ -10,7 +10,7 @@
 <section class="hero"><div class="wrap">
 <span class="pill">Remote MCP</span><span class="pill">Claude, ChatGPT, Cursor, VS Code</span><span class="pill">Free tier</span>
 <h1>SEO and AI-search tools inside your AI assistant. Nothing to install.</h1>
-<p class="lead">Connect one URL and ask Claude or ChatGPT to cluster keywords, find cannibalization in your live Search Console data, fix titles, write briefs, and check whether ChatGPT, Perplexity and Google AI Overviews can cite your pages.</p>
+<p class="lead">Connect one URL and ask Claude or ChatGPT to check whether ChatGPT, Perplexity and Google AI Overviews can cite your pages, audit your llms.txt, cluster keywords, find cannibalization in a Search Console export, fix titles and write briefs.</p>
 <div class="row"><a class="btn accent" href="#signup">Get a free key (300 calls/month)</a><a class="btn ghost" href="/connect.html">Connect in 2 minutes</a></div>
 <p class="muted" style="margin-top:14px">Server URL: <code>https://mcp.cygnixlabs.com/mcp</code></p>
 </div></section>
@@ -18,7 +18,7 @@
 <section id="tools"><div class="wrap">
 <h2>What the tools do</h2><p class="sub">Each tool returns a clean table or checklist your assistant can act on right away.</p>
 <div class="grid g3">
-<div class="card tool"><h3>Live Search Console</h3><p>Connect Google once with one click (read-only). Then <code>gsc_search_analytics</code>, <code>gsc_find_cannibalization</code> and <code>gsc_inspect_url</code> pull clicks, impressions, positions and index status live.</p></div>
+<div class="card tool"><h3>Live Search Console <span class="pill">Coming soon</span></h3><p>One-click, read-only Google connection to pull clicks, impressions, positions and index status live. Until then, paste a Search Console export into <code>find_keyword_cannibalization</code>.</p></div>
 <div class="card tool"><h3>AI-search visibility (AEO)</h3><p><code>check_ai_search_readiness</code> scores a page 0-100. It checks whether OAI-SearchBot, Claude-SearchBot, PerplexityBot, Bingbot and Googlebot can reach it, plus schema, answer-ready structure and server-rendered text.</p></div>
 <div class="card tool"><h3>llms.txt checker</h3><p><code>check_llms_txt</code> validates /llms.txt against the llmstxt.org format and writes a starter file if you don't have one.</p></div>
 <div class="card tool"><h3>Keyword clustering and intent</h3><p><code>cluster_keywords</code> groups a list into pages with a pillar keyword. <code>classify_search_intent</code> tags each keyword as informational, commercial, transactional or navigational.</p></div>
@@ -27,9 +27,9 @@
 </div></div></section>
 
 <section id="pricing"><div class="wrap">
-<h2>Pricing</h2><p class="sub">Every plan includes every tool. A call is one tool run. Connecting and listing tools are free. Cancel any time.</p>
+<h2>Pricing</h2><p class="sub">Every plan includes every tool, and live Search Console is coming soon to all of them. A call is one tool run. Connecting and listing tools are free. Cancel any time.</p>
 <div class="grid g4">
-<div class="card tier"><span class="tag">Start here</span><h3>Free</h3><div class="price">$0</div><ul><li>300 tool calls / month</li><li>All tools, incl. Search Console + AEO</li><li>1 API key, 10 requests/min</li></ul><a class="btn ghost" href="#signup">Get a free key</a></div>
+<div class="card tier"><span class="tag">Start here</span><h3>Free</h3><div class="price">$0</div><ul><li>300 tool calls / month</li><li>All tools, incl. AEO + llms.txt checks</li><li>1 API key, 10 requests/min</li></ul><a class="btn ghost" href="#signup">Get a free key</a></div>
 <div class="card tier"><span class="tag">Solo</span><h3>Pro</h3><div class="price">$15<small>/mo</small></div><ul><li>5,000 tool calls / month</li><li>3 API keys, 60 requests/min</li><li>Email support</li></ul><button class="btn" data-tier="pro">Upgrade to Pro</button></div>
 <div class="card tier featured"><span class="tag">Teams</span><h3>Growth</h3><div class="price">$39<small>/mo</small></div><ul><li>25,000 tool calls / month</li><li>10 API keys, 120 requests/min</li><li>Priority email support</li></ul><button class="btn" data-tier="growth">Upgrade to Growth</button></div>
 <div class="card tier"><span class="tag">Agencies</span><h3>Agency</h3><div class="price">$99<small>/mo</small></div><ul><li>100,000 tool calls / month, pooled</li><li>50 API keys (one per client), 300 requests/min</li><li>White-label PDF reports with your logo and colours</li></ul><button class="btn" data-tier="agency">Upgrade to Agency</button></div>
@@ -48,7 +48,7 @@
 
 <section><div class="wrap"><h2>Why Cygnix</h2>
 <div class="grid g3">
-<div class="card"><h3>SEO and AI search in one connector</h3><p>Classic Search Console work plus checks for ChatGPT search, Perplexity and AI Overviews, with no second tool to buy.</p></div>
+<div class="card"><h3>SEO and AI search in one connector</h3><p>Classic SEO work plus checks for ChatGPT search, Perplexity and AI Overviews, with no second tool to buy. Live Search Console is next.</p></div>
 <div class="card"><h3>Built for agencies</h3><p>One key per client, a pooled quota, and branded PDFs you can send as-is.</p></div>
 <div class="card"><h3>A real free tier</h3><p>300 calls a month to try every tool on your own site before you pay.</p></div>
 </div></div></section>
@@ -60,8 +60,8 @@
 <div class="grid g3">
 <div class="card"><h3>Which apps does it work with?</h3><p>Claude (custom connectors, Claude Code), ChatGPT (developer mode connectors), Cursor, VS Code and any remote MCP client. See <a href="/connect.html">Connect</a>.</p></div>
 <div class="card"><h3>What counts as a call?</h3><p>One tool run. Quotas reset on the 1st of each month (UTC). When you hit the limit, the assistant gets a clear message with an upgrade link.</p></div>
-<div class="card"><h3>Is my Search Console data stored?</h3><p>No. We keep only an encrypted, revocable refresh token. Data is fetched when a tool runs and isn't kept. <a href="/privacy.html">Privacy</a></p></div>
-<div class="card"><h3>Is there a local version?</h3><p>Yes. <code>npx cygnix-seo-mcp</code> runs the five core tools free on your machine over stdio. The hosted version adds Search Console, AEO checks and reports.</p></div>
+<div class="card"><h3>When is live Search Console coming?</h3><p>Soon, once Google finishes reviewing our app. It will be read-only and revocable, and we will store only an encrypted token, never your data. <a href="/privacy.html">Privacy</a></p></div>
+<div class="card"><h3>Is there a local version?</h3><p>Yes. <code>npx cygnix-seo-mcp</code> runs the five core tools free on your machine over stdio. The hosted version adds AEO and llms.txt checks, agency reports, and soon live Search Console.</p></div>
 </div></div></section>
 </main>
 <script>

@@ -56,7 +56,7 @@ node dist/index.js
 
 ## Hosted version (remote MCP) — in preview
 
-A hosted remote server is being prepared at `https://mcp.cygnixlabs.com/mcp` (Streamable HTTP). It adds live Google Search Console tools, AI-search (AEO) and llms.txt checks, and white-label PDF reports. You can use it from Claude, ChatGPT, Cursor, Claude Code and VS Code without installing anything. Plans: Free (300 calls/month), Pro $15, Growth $39, Agency $99. The local stdio package above stays free and unchanged.
+A hosted remote server is being prepared at `https://mcp.cygnixlabs.com/mcp` (Streamable HTTP). It adds AI-search (AEO) and llms.txt checks and white-label PDF reports, with a live Google Search Console connection coming soon. You can use it from Claude, ChatGPT, Cursor, Claude Code and VS Code without installing anything. Plans: Free (300 calls/month), Pro $15, Growth $39, Agency $99. The local stdio package above stays free and unchanged.
 
 Developers: `npm run build && npm run hosted:dev` starts it locally at `http://localhost:8787/mcp`. See [docs/hosting.md](docs/hosting.md), [docs/hosted-api.md](docs/hosted-api.md) and [docs/OWNER-CHECKLIST.md](docs/OWNER-CHECKLIST.md).
 
