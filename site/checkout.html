@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Upgrade your plan | Cygnix SEO MCP</title><meta name="description" content="Upgrade a Cygnix SEO MCP key to Pro, Growth or Agency."><meta name="robots" content="noindex"><link rel="canonical" href="https://mcp.cygnixlabs.com/checkout.html">
+<link rel="stylesheet" href="/styles.css"><link rel="icon" href="/icon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.png" type="image/png" sizes="64x64"></head><body>
+<div class="draft">Draft, pending legal review. Paid plans open when billing goes live.</div>
+<header class="top"><div class="wrap"><a class="logo" href="/">Cygnix<span>.</span> SEO MCP</a><nav><a href="/#tools">Tools</a><a href="/#pricing">Pricing</a><a href="/connect.html">Connect</a><a href="/account.html">Account</a><a class="btn" href="/#signup">Get a free key</a></nav></div></header>
+<main><section class="hero"><div class="wrap"><h1>Upgrade your plan</h1>
+<p class="lead">Paste your key, pick a plan and how you want to pay. Your existing key gets the new limits; you don't need to reconnect.</p>
+<div class="card" id="closed" hidden><h3>Paid plans open soon</h3><p>Email <a href="mailto:info@cygnixlabs.com?subject=Early%20access">info@cygnixlabs.com</a> for early access.</p></div>
+<form id="co" hidden>
+<p><input id="k" type="password" placeholder="cyg_live_..." autocomplete="off" required></p>
+<p><select id="tier"></select></p>
+<fieldset class="card" style="margin:12px 0"><legend><strong>Pay with</strong></legend><div id="provs"></div></fieldset>
+<p class="muted" id="note"></p>
+<button class="btn" type="submit">Continue</button></form>
+<div class="out" id="o"></div></div></section></main>
+<script>
+const $=id=>document.getElementById(id);const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+(async()=>{const p=await (await fetch("/v1/plans")).json();
+ if(!p.providers.length){$("closed").hidden=false;return}
+ const want=new URLSearchParams(location.search).get("tier");
+ $("tier").innerHTML=p.tiers.filter(t=>t.priceUsdMonthly>0).map(t=>'<option value="'+t.id+'"'+(t.id===want?" selected":"")+">"+esc(t.name)+" $"+t.priceUsdMonthly+"/mo · "+t.monthlyCalls.toLocaleString("en-US")+" calls</option>").join("");
+ $("provs").innerHTML=p.providers.map(x=>'<label class="chk"><input type="radio" name="prov" value="'+esc(x.id)+'"'+(x.id===p.default_provider?" checked":"")+"> "+esc(x.label)+(x.recurring?" · renews monthly, cancel any time":" · one-time, "+p.prepaid_period_days+" days")+"</label>").join("");
+ $("note").textContent="One-time payments don't renew automatically: pay again before the period ends to keep your plan.";
+ $("co").hidden=false})();
+$("co").addEventListener("submit",async e=>{e.preventDefault();const o=$("o");const prov=document.querySelector("input[name=prov]:checked")?.value;
+ try{const r=await fetch("/v1/billing/checkout",{method:"POST",headers:{"content-type":"application/json",authorization:"Bearer "+$("k").value.trim()},body:JSON.stringify({tier:$("tier").value,provider:prov})});const j=await r.json();
+ if(r.ok&&j.url)return location.assign(j.url);o.className="out err";o.textContent=j.error?.message||"Checkout is not available yet."}catch(err){o.className="out err";o.textContent="Network error, try again."}});
+</script>
+<footer><div class="wrap"><a href="/privacy.html">Privacy</a><a href="/terms.html">Terms</a><a href="/connect.html">Connect guide</a><a href="/account.html">Account</a><a href="https://skills.cygnixlabs.com">skills.cygnixlabs.com</a><a href="https://github.com/cygnixlabs-cmd/cygnix-seo-mcp">GitHub</a><a href="mailto:info@cygnixlabs.com">info@cygnixlabs.com</a><p>© 2026 Cygnix Labs. Independent product, not affiliated with Google, OpenAI or Anthropic.</p></div></footer>
+</body></html>
