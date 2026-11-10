@@ -26,10 +26,11 @@ export async function applyBillingUpdate(store: Store, env: HostedEnv, u: Billin
   if (!acct) return "no_account";
   const sameSub = !acct.billing_subscription_id || acct.billing_provider !== u.provider || acct.billing_subscription_id === u.subscriptionId;
   if (u.state === "ending") {
+    // PayPal CANCELLED stops future billing but the paid period stays usable; Stripe deleted / Whop deactivated mean access has ended.
     // Ignore an old subscription ending after the customer already moved to a new one.
     if (!sameSub && acct.billing_status === "active") return "ignored_stale";
     await store.setBilling(acct.id, { provider: u.provider, subscription: u.subscriptionId ?? acct.billing_subscription_id, status: "ending",
-      paidThrough: acct.paid_through && acct.paid_through > Math.floor(Date.now() / 1000) && u.eventType.match(/CANCELLED|deleted|deactivated/i) ? acct.paid_through : null });
+      paidThrough: acct.paid_through && acct.paid_through > Math.floor(Date.now() / 1000) && /CANCELLED$/.test(u.eventType) ? acct.paid_through : null });
     const after = await store.account(acct.id);
     if (!after!.paid_through || after!.paid_through <= Math.floor(Date.now() / 1000)) { await store.setTier(acct.id, "free"); return "downgraded_free"; }
     return "ending_at_period_end";

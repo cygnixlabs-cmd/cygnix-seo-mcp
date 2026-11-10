@@ -128,7 +128,7 @@ export function createApp(deps: AppDeps) {
 
   async function admin(req: Request, path: string): Promise<Response> {
     const deny = requireAdmin(req); if (deny) return deny;
-    const seg = path.split("/").filter(Boolean).slice(1); // after "admin"
+    const seg = path.split("/").filter(Boolean).slice(1).map(s => { try { return decodeURIComponent(s); } catch { return s; } }); // after "admin"
     const b = req.method === "POST" ? await readBody(req) : {};
     if (seg[0] === "accounts" && seg.length === 1) {
       if (req.method === "GET") return json({ accounts: await store.listAccounts(Number(new URL(req.url).searchParams.get("limit") ?? 100)) });

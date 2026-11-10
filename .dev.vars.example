@@ -1,0 +1,29 @@
+# Copy to .dev.vars for `npm run worker:dev` (wrangler) or export for `npm run hosted:dev` (node).
+# Never commit real values. Leave a block empty to keep that feature inert.
+PUBLIC_BASE_URL=http://localhost:8787
+ADMIN_TOKEN=change-me-long-random
+# PayPal (sandbox first)
+PAYPAL_ENV=sandbox
+PAYPAL_CLIENT_ID=
+PAYPAL_CLIENT_SECRET=
+PAYPAL_WEBHOOK_ID=
+PAYPAL_PLAN_PRO=
+PAYPAL_PLAN_GROWTH=
+PAYPAL_PLAN_AGENCY=
+# Whop
+WHOP_API_KEY=
+WHOP_WEBHOOK_SECRET=
+WHOP_PLAN_PRO=
+WHOP_PLAN_GROWTH=
+WHOP_PLAN_AGENCY=
+# Stripe (later)
+STRIPE_SECRET_KEY=
+STRIPE_WEBHOOK_SECRET=
+STRIPE_PRICE_PRO=
+STRIPE_PRICE_GROWTH=
+STRIPE_PRICE_AGENCY=
+# Google Search Console OAuth
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+# openssl rand -base64 32
+TOKEN_ENCRYPTION_KEY=

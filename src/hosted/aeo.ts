@@ -130,9 +130,10 @@ export function llmsReport(origin: string, llms: { status: number; text: string 
 // ---------- safe fetch ----------
 const PRIVATE = /^(localhost|.*\.local|.*\.internal|0\.0\.0\.0|127\.|10\.|192\.168\.|169\.254\.|172\.(1[6-9]|2\d|3[01])\.|\[?::1\]?|\[?f[cd][0-9a-f]{2}:)/i;
 export function assertPublicUrl(raw: string): URL {
+  if (/^[a-z][a-z0-9+.-]*:/i.test(raw) && !/^https?:\/\//i.test(raw)) throw new Error("Only http(s) URLs are supported.");
   let u: URL; try { u = new URL(/^https?:\/\//i.test(raw) ? raw : `https://${raw}`); } catch { throw new Error(`Not a valid URL: ${raw}`); }
   if (!/^https?:$/.test(u.protocol)) throw new Error("Only http(s) URLs are supported.");
-  if (PRIVATE.test(u.hostname) || /^\d+$/.test(u.hostname)) throw new Error("Private or local addresses are not allowed.");
+  if (PRIVATE.test(u.hostname) || /^\d+$/.test(u.hostname) || (!u.hostname.includes(".") && !u.hostname.startsWith("["))) throw new Error("Private or local addresses are not allowed.");
   return u;
 }
 export async function safeFetchText(fetchImpl: typeof fetch, url: string, maxBytes = 2_000_000, timeoutMs = 10_000): Promise<{ status: number; text: string; contentType: string }> {

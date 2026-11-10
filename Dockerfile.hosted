@@ -1,0 +1,12 @@
+# Fallback host (any Docker host: Fly.io, Render, a VPS). Primary target is Cloudflare Workers (wrangler.toml).
+# Uses node:sqlite; mount a persistent volume at /data.
+FROM node:24-alpine
+WORKDIR /app
+COPY package*.json tsconfig.json ./
+COPY src ./src
+COPY migrations ./migrations
+COPY site ./site
+RUN npm ci && npm run build && npm prune --omit=dev
+ENV PORT=8080 HOSTED_DB=/data/hosted.sqlite NODE_ENV=production
+EXPOSE 8080
+CMD ["node", "dist/hosted/node.js"]
