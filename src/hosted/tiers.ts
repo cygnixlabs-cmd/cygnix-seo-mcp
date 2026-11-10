@@ -1,12 +1,13 @@
 // Tier catalogue. Quotas count `tools/call` requests per calendar month (UTC), pooled across an account's keys.
 // initialize / tools/list / ping are free but still rate limited.
 export type TierId = "free" | "pro" | "growth" | "agency";
-export type ProviderId = "paypal" | "whop" | "stripe";
+/** Billing provider id. Built-ins: paypal, whop, stripe (subscriptions), crypto (hosted invoice), payoneer, paypal_link, crypto_wallet (manual). */
+export type ProviderId = string;
 export interface Tier {
   id: TierId; name: string; priceUsdMonthly: number;
   monthlyCalls: number; perMinute: number; maxKeys: number; whiteLabelReports: boolean;
   /** env var holding the provider's plan / price id for this tier */
-  planEnv?: Record<ProviderId, string>;
+  planEnv?: Partial<Record<ProviderId, string>>;
   blurb: string;
 }
 const plan = (t: string) => ({ paypal: `PAYPAL_PLAN_${t}`, whop: `WHOP_PLAN_${t}`, stripe: `STRIPE_PRICE_${t}` });

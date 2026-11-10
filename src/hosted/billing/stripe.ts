@@ -30,7 +30,7 @@ export const createStripe: ProviderFactory = (env, fetchImpl) => {
       subscriptionId: s.id ?? null, planId: item?.price?.id ?? null, state, status: st, paidThrough: state === "ending" ? null : (item?.current_period_end ?? s.current_period_end ?? null) };
   };
   const p: BillingProvider = {
-    id: "stripe", label: "Stripe",
+    id: "stripe", label: "Card (Stripe)", kind: "subscription",
     missingEnv: () => {
       const m = missing(env, ["STRIPE_SECRET_KEY", "STRIPE_WEBHOOK_SECRET"]);
       if (!PAID_TIERS.some(t => planIdFor("stripe", t, env))) m.push("STRIPE_PRICE_PRO|STRIPE_PRICE_GROWTH|STRIPE_PRICE_AGENCY");

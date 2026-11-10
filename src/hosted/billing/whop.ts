@@ -19,7 +19,7 @@ export async function verifyStandardWebhook(secret: string, rawBody: string, h: 
 export const createWhop: ProviderFactory = (env, fetchImpl) => {
   const base = String(env.WHOP_API_BASE || "https://api.whop.com/api/v1").replace(/\/+$/, "");
   const p: BillingProvider = {
-    id: "whop", label: "Whop",
+    id: "whop", label: "Whop", kind: "subscription",
     missingEnv: () => {
       const m = missing(env, ["WHOP_API_KEY", "WHOP_WEBHOOK_SECRET"]);
       if (!PAID_TIERS.some(t => planIdFor("whop", t, env))) m.push("WHOP_PLAN_PRO|WHOP_PLAN_GROWTH|WHOP_PLAN_AGENCY");

@@ -18,10 +18,11 @@ const ppEvent = (id, type, resource) => ({ id, event_type: type, resource_type: 
 test("billing is inert with no provider env vars", async () => {
   const { signup, post, req } = makeApp();
   const s = await signup();
-  const h = await (await req("/health")).json(); assert.deepEqual(h.billing, { paypal: false, whop: false, stripe: false });
+  const h = await (await req("/health")).json(); assert.deepEqual(h.billing, { paypal: false, whop: false, stripe: false, crypto: false, payoneer: false, paypal_link: false, crypto_wallet: false });
   const c = await post("/v1/billing/checkout", { tier: "pro" }, { authorization: `Bearer ${s.api_key}` });
   assert.equal(c.status, 503); assert.equal((await c.json()).error.code, "billing_not_configured");
-  for (const p of ["paypal", "whop", "stripe"]) assert.equal((await post(`/webhooks/${p}`, "{}")).status, 503);
+  for (const p of ["paypal", "whop", "stripe", "crypto"]) assert.equal((await post(`/webhooks/${p}`, "{}")).status, 503);
+  for (const p of ["payoneer", "paypal_link", "crypto_wallet", "nope"]) assert.equal((await post(`/webhooks/${p}`, "{}")).status, 404, "manual/unknown providers have no webhook");
   const partial = makeApp({ PAYPAL_CLIENT_ID: "x", PAYPAL_CLIENT_SECRET: "y" });
   assert.equal((await (await partial.req("/health")).json()).billing.paypal, false, "partially configured stays inert");
 });

@@ -10,7 +10,7 @@ workers_dev = true
 directory = "./site"
 binding = "ASSETS"
 not_found_handling = "404-page"
-run_worker_first = ["/mcp", "/mcp/*", "/v1/*", "/oauth/*", "/.well-known/*", "/webhooks/*", "/google/*", "/reports/*", "/admin/*", "/health"]
+run_worker_first = ["/mcp", "/mcp/*", "/pay/*", "/v1/*", "/oauth/*", "/.well-known/*", "/webhooks/*", "/google/*", "/reports/*", "/admin/*", "/health"]
 
 [[d1_databases]]
 binding = "DB"
@@ -21,7 +21,16 @@ migrations_dir = "migrations"
 [vars]
 PUBLIC_BASE_URL = "https://mcp.cygnixlabs.com"
 PAYPAL_ENV = "sandbox"          # switch to "live" after sandbox testing
-BILLING_PROVIDER = "paypal"     # default checkout provider when several are configured
+BILLING_PROVIDER = "paypal"     # default checkout provider when several are configured (any enabled provider id)
+# BILLING_PROVIDER_ORDER = "paypal,crypto,payoneer,paypal_link,crypto_wallet"   # checkout page order (optional)
+PREPAID_PERIOD_DAYS = "30"      # days one one-time/manual payment buys
+HIDE_PRICES_FOR_CLIENTS = "chatgpt,openai"   # no prices/upgrade CTAs for these clients (OpenAI plugin rules); "" = off
+# Manual gateways (not secrets, so they can live here or be set as secrets):
+# PAYONEER_ENABLED = "true"                 # Payoneer payment request flow; optional PAYONEER_LINK / PAYONEER_LINK_PRO|GROWTH|AGENCY
+# PAYPAL_ME_URL = "https://paypal.me/<name>"
+# CRYPTO_WALLETS = "USDT (TRC-20)=T...; USDC (Base)=0x..."
+# CRYPTO_GATEWAY = "nowpayments"            # + secrets NOWPAYMENTS_API_KEY, NOWPAYMENTS_IPN_SECRET
+# OPENAI_APPS_CHALLENGE = "<token from the OpenAI plugin portal>"
 
 # Uncomment after cygnixlabs.com is on Cloudflare DNS (docs/OWNER-CHECKLIST.md step 2).
 # Wrangler then creates the DNS record for mcp.cygnixlabs.com automatically.

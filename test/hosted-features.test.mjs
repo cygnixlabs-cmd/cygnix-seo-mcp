@@ -38,7 +38,7 @@ test("GSC: connect link -> callback stores encrypted refresh token -> gsc tools 
   const link = (await call(s.api_key, "gsc_connect")).body.result.content[0].text.match(/https:\/\/accounts\.google\.com\S+/)[0];
   const u = new URL(link); assert.equal(u.searchParams.get("scope"), "https://www.googleapis.com/auth/webmasters.readonly"); assert.equal(u.searchParams.get("access_type"), "offline");
   assert.equal(u.searchParams.get("redirect_uri"), "https://mcp.test/google/callback");
-  const forged = await req(`/google/callback?code=abc&state=${encodeURIComponent(u.searchParams.get("state").replace(/.$/, "0"))}`);
+  const forged = await req(`/google/callback?code=abc&state=${encodeURIComponent(u.searchParams.get("state").replace(/.$/, c => c === "0" ? "1" : "0"))}`);
   assert.equal(forged.status, 400);
   const cb = await req(`/google/callback?code=abc&state=${encodeURIComponent(u.searchParams.get("state"))}`);
   assert.equal(cb.status, 200); assert.match(await cb.text(), /Search Console connected/);

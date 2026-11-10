@@ -1,6 +1,6 @@
 // Data access for accounts, API keys, metering, rate limits, OAuth tokens and Stripe events.
 import type { Db } from "./db.js";
-import { newApiKey, newId, sha256Hex } from "./crypto.js";
+import { newApiKey, newId, sha256Hex, randomToken } from "./crypto.js";
 import { TIERS, isTier, type TierId } from "./tiers.js";
 
 export interface Account {
@@ -9,10 +9,16 @@ export interface Account {
   created_at: number; updated_at: number;
 }
 export interface ApiKeyRow { id: string; account_id: string; key_prefix: string; label: string | null; created_at: number; last_used_at: number | null; revoked_at: number | null }
-/** Tier actually enforced: a cancelled subscription keeps its paid tier until paid_through, then drops to free. */
+/** Tier actually enforced: a cancelled subscription keeps its paid tier until paid_through, then drops to free.
+ *  A prepaid (one-time / manual) payment works the same way: the tier lasts until paid_through. */
 export function effectiveTier(a: Pick<Account, "tier" | "billing_status" | "paid_through">, nowS = nowSec()): TierId {
-  if (a.tier !== "free" && a.billing_status === "ending" && (!a.paid_through || a.paid_through < nowS)) return "free";
+  if (a.tier !== "free" && (a.billing_status === "ending" || a.billing_status === "prepaid") && (!a.paid_through || a.paid_through < nowS)) return "free";
   return a.tier;
+}
+export interface Order {
+  id: string; account_id: string; provider: string; tier: TierId; amount_usd: number; status: string;
+  external_id: string | null; payer_reference: string | null; note: string | null; period_days: number;
+  created_at: number; updated_at: number; paid_at: number | null;
 }
 export class StoreError extends Error { constructor(public status: number, public code: string, msg: string) { super(msg); } }
 
@@ -129,7 +135,7 @@ export class Store {
     return id;
   }
   async client(id: string) {
-    const r = await this.db.prepare("SELECT * FROM oauth_clients WHERE client_id=?").bind(id).first<{ client_id: string; client_name: string; redirect_uris: string }>();
+    const r = await this.db.prepare("SELECT * FROM oauth_clients WHERE client_id=?").bind(id).first<{ client_id: string; client_name: string; redirect_uris: string; last_client_info: string | null }>();
     return r ? { ...r, redirect_uris: JSON.parse(r.redirect_uris) as string[] } : null;
   }
   async saveCode(code: string, f: { client_id: string; key_id: string; redirect_uri: string; code_challenge: string; resource?: string | null }, ttl = 600) {
@@ -153,6 +159,42 @@ export class Store {
     return r && !r.revoked_at && r.expires_at > nowSec() ? r : null;
   }
   async revokeToken(token: string) { await this.db.prepare("UPDATE oauth_tokens SET revoked_at=? WHERE token_hash=?").bind(nowSec(), await sha256Hex(token)).run(); }
+
+  // ---- client hints (for hiding prices in ChatGPT; see client-detect.ts) ----
+  async setClientHint(f: { oauthClientId?: string | null; keyId?: string | null }, info: string) {
+    const v = info.slice(0, 200);
+    if (f.oauthClientId) await this.db.prepare("UPDATE oauth_clients SET last_client_info=? WHERE client_id=?").bind(v, f.oauthClientId).run();
+    else if (f.keyId) await this.db.prepare("UPDATE api_keys SET last_client_info=? WHERE id=?").bind(v, f.keyId).run();
+  }
+  async keyClientHint(keyId: string) { return (await this.db.prepare("SELECT last_client_info FROM api_keys WHERE id=?").bind(keyId).first<{ last_client_info: string | null }>())?.last_client_info ?? null; }
+
+  // ---- one-time / manual orders (crypto invoices, Payoneer, PayPal.me, wallet transfers) ----
+  async createOrder(f: { accountId: string; provider: string; tier: TierId; amountUsd: number; periodDays: number }): Promise<Order> {
+    const id = `ord_${randomToken(24)}`; const t = nowSec();
+    await this.db.prepare("INSERT INTO billing_orders (id,account_id,provider,tier,amount_usd,status,period_days,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?,?)")
+      .bind(id, f.accountId, f.provider, f.tier, f.amountUsd, "pending", f.periodDays, t, t).run();
+    return (await this.order(id))!;
+  }
+  order(id: string) { return this.db.prepare("SELECT * FROM billing_orders WHERE id=?").bind(id).first<Order>(); }
+  async listOrders(f: { status?: string; accountId?: string; limit?: number } = {}) {
+    const where: string[] = []; const args: unknown[] = [];
+    if (f.status) { where.push("status=?"); args.push(f.status); }
+    if (f.accountId) { where.push("account_id=?"); args.push(f.accountId); }
+    const sql = `SELECT * FROM billing_orders ${where.length ? "WHERE " + where.join(" AND ") : ""} ORDER BY created_at DESC LIMIT ?`;
+    return (await this.db.prepare(sql).bind(...args, Math.min(Math.max(f.limit ?? 100, 1), 500)).all<Order>()).results;
+  }
+  async updateOrder(id: string, f: { status?: string; externalId?: string | null; payerReference?: string | null; note?: string | null; paidAt?: number | null }) {
+    const o = await this.order(id); if (!o) return null;
+    const pick = <T>(v: T | undefined, cur: T) => (v !== undefined ? v : cur);
+    await this.db.prepare("UPDATE billing_orders SET status=?, external_id=?, payer_reference=?, note=?, paid_at=?, updated_at=? WHERE id=?")
+      .bind(pick(f.status, o.status), pick(f.externalId, o.external_id), pick(f.payerReference, o.payer_reference), pick(f.note, o.note), pick(f.paidAt, o.paid_at), nowSec(), id).run();
+    return this.order(id);
+  }
+  /** Atomically flip pending -> paid. Returns false if it was not pending (already paid / cancelled), so activation runs once. */
+  async markOrderPaid(id: string, externalId?: string | null) {
+    const r = await this.db.prepare("UPDATE billing_orders SET status='paid', paid_at=?, updated_at=?, external_id=COALESCE(?, external_id) WHERE id=? AND status='pending'").bind(nowSec(), nowSec(), externalId ?? null, id).run();
+    return (r.meta?.changes ?? 0) > 0;
+  }
 
   // ---- billing webhook idempotency ----
   async markEvent(id: string, type: string): Promise<boolean> {

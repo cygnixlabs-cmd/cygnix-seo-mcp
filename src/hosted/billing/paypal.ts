@@ -26,7 +26,7 @@ export const createPayPal: ProviderFactory = (env, fetchImpl) => {
   }
   const approveLink = (j: { links?: { rel: string; href: string }[] }) => j.links?.find(l => l.rel === "approve")?.href;
   const p: BillingProvider = {
-    id: "paypal", label: "PayPal",
+    id: "paypal", label: "PayPal", kind: "subscription",
     missingEnv: () => {
       const m = missing(env, ["PAYPAL_CLIENT_ID", "PAYPAL_CLIENT_SECRET", "PAYPAL_WEBHOOK_ID"]);
       if (!PAID_TIERS.some(t => planIdFor("paypal", t, env))) m.push("PAYPAL_PLAN_PRO|PAYPAL_PLAN_GROWTH|PAYPAL_PLAN_AGENCY");

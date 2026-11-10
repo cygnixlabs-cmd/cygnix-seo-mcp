@@ -10,6 +10,12 @@ const HELP = `cygnix-admin <command>
   key <id|email> [label]           issue another key (no tier limit)
   revoke <key_id>                  revoke a key (also kills its OAuth tokens)
   rotate <key_id>                  issue a replacement key and revoke the old one
+  orders [status]                  list one-time/manual orders (status: pending|paid|cancelled|failed)
+  order <ord_id>                   show one order (payer reference, amount, provider)
+  activate-order <ord_id> [ref]    mark a manual order paid and switch the plan on (after checking the payment)
+  cancel-order <ord_id> [note]     cancel an unpaid order
+  grant <id|email> <tier> [days] [provider] [ref]
+                                   activate a paid plan for any gateway without webhooks (records a paid order)
 Env: CYGNIX_ADMIN_URL (default http://localhost:8787), CYGNIX_ADMIN_TOKEN (required)`;
 
 const base = (process.env.CYGNIX_ADMIN_URL ?? "http://localhost:8787").replace(/\/+$/, "");
@@ -18,7 +24,7 @@ async function call(method: string, path: string, body?: unknown) {
   const r = await fetch(`${base}/admin${path}`, { method, headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" }, body: body ? JSON.stringify(body) : undefined });
   const t = await r.text(); if (!r.ok) { console.error(`HTTP ${r.status}: ${t}`); process.exit(1); } return JSON.parse(t);
 }
-const [cmd, a, b, c] = process.argv.slice(2);
+const [cmd, a, b, c, d, f] = process.argv.slice(2);
 if (!cmd || cmd === "help" || cmd === "--help") { console.log(HELP); process.exit(0); }
 if (!token) { console.error("Set CYGNIX_ADMIN_TOKEN"); process.exit(1); }
 const e = encodeURIComponent;
@@ -32,5 +38,10 @@ const out = await ({
   key: () => call("POST", `/accounts/${e(a)}/keys`, { label: b }),
   revoke: () => call("POST", `/keys/${e(a)}/revoke`, {}),
   rotate: () => call("POST", `/keys/${e(a)}/rotate`, {}),
+  orders: () => call("GET", `/orders${a ? `?status=${e(a)}` : ""}`),
+  order: () => call("GET", `/orders/${e(a)}`),
+  "activate-order": () => call("POST", `/orders/${e(a)}/activate`, { reference: b }),
+  "cancel-order": () => call("POST", `/orders/${e(a)}/cancel`, { note: b }),
+  grant: () => call("POST", `/accounts/${e(a)}/grant`, { tier: b, days: c ? Number(c) : undefined, provider: d ?? "manual", reference: f }),
 } as Record<string, () => Promise<unknown>>)[cmd]?.() ?? (console.error(HELP), process.exit(1));
 console.log(JSON.stringify(out, null, 2));

@@ -4,7 +4,7 @@
 import { effectiveTier, type Store, type Account } from "./store.js";
 import type { TierId } from "./tiers.js";
 
-export interface Principal { accountId: string; keyId: string; tier: TierId; email: string; status: string; via: "api_key" | "oauth"; account: Account }
+export interface Principal { accountId: string; keyId: string; tier: TierId; email: string; status: string; via: "api_key" | "oauth"; account: Account; oauthClientId?: string }
 export interface Authenticator { name: string; matches(token: string): boolean; authenticate(token: string): Promise<Principal | null> }
 
 export function extractToken(req: Request): string | null {
@@ -27,7 +27,10 @@ export const apiKeyAuthenticator = (store: Store): Authenticator => ({
 /** Tokens minted by the built-in OAuth bridge (/oauth/*). Each is bound to one API key, so metering is identical. */
 export const oauthTokenAuthenticator = (store: Store): Authenticator => ({
   name: "oauth", matches: t => t.startsWith("cyg_at_"),
-  authenticate: async t => { const tok = await store.tokenLookup(t, "access"); return tok ? toPrincipal(await store.keyContext(tok.key_id), "oauth") : null; },
+  authenticate: async t => {
+    const tok = await store.tokenLookup(t, "access"); if (!tok) return null;
+    const p = toPrincipal(await store.keyContext(tok.key_id), "oauth"); return p ? { ...p, oauthClientId: tok.client_id } : null;
+  },
 });
 export const defaultAuthenticators = (store: Store): Authenticator[] => [apiKeyAuthenticator(store), oauthTokenAuthenticator(store)];
 

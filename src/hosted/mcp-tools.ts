@@ -5,7 +5,7 @@ import { ANNOTATIONS } from "../annotations.js";
 import type { Principal } from "./auth.js";
 import type { Store } from "./store.js";
 import { periodOf, periodResetIso } from "./store.js";
-import { baseUrl, upgradeUrl, type HostedEnv } from "./env.js";
+import { baseUrl, upgradeUrl, accountUrl, type HostedEnv } from "./env.js";
 import { TIERS, nextTier } from "./tiers.js";
 import { GoogleClient, GoogleError, connectUrl, googleConfigured } from "./google.js";
 import { runAeoCheck, runLlmsCheck, assertPublicUrl } from "./aeo.js";
@@ -13,7 +13,9 @@ import { renderReportPdf, sniffImage, validColor } from "./report.js";
 import { cannibalization } from "../tools.js";
 import { b64encode, randomToken } from "./crypto.js";
 
-export interface ToolCtx { principal: Principal; store: Store; env: HostedEnv; fetchImpl: typeof fetch; webFetch: typeof fetch }
+export interface ToolCtx { principal: Principal; store: Store; env: HostedEnv; fetchImpl: typeof fetch; webFetch: typeof fetch;
+  /** true for clients such as ChatGPT: no prices, plan offers or upgrade links; only "not on your plan" + the informational account page. */
+  hidePrices?: boolean }
 const text = (t: string) => ({ content: [{ type: "text" as const, text: t }] });
 const fail = (t: string) => ({ isError: true, content: [{ type: "text" as const, text: t }] });
 const guard = <A>(f: (a: A) => Promise<string>) => async (a: A) => { try { return text(await f(a)); } catch (e) { return fail(`Error: ${(e as Error).message}`); } };
@@ -21,10 +23,13 @@ const csvq = (v: string) => `"${v.replace(/"/g, '""')}"`;
 const daysAgo = (n: number) => new Date(Date.now() - n * 86400_000).toISOString().slice(0, 10);
 
 export function registerHostedTools(server: McpServer, c: ToolCtx) {
-  const tier = TIERS[c.principal.tier];
-  server.tool("account_status", "Show this Cygnix API key's plan, monthly tool-call usage, limits and upgrade options.", {}, ANNOTATIONS["account_status"], guard(async () => {
+  const tier = TIERS[c.principal.tier]; const hide = !!c.hidePrices;
+  server.tool("account_status", hide ? "Show this Cygnix key's current plan, monthly tool-call usage and limits." : "Show this Cygnix API key's plan, monthly tool-call usage, limits and upgrade options.", {}, ANNOTATIONS["account_status"], guard(async () => {
     const used = await c.store.accountUsage(c.principal.accountId); const nt = nextTier(tier.id);
     const g = await c.store.google(c.principal.keyId);
+    if (hide) return [`Plan: ${tier.name}`, `Usage ${periodOf()}: ${used} / ${tier.monthlyCalls} tool calls (resets ${periodResetIso()})`,
+      `Rate limit: ${tier.perMinute} requests/minute; keys allowed: ${tier.maxKeys}`, `Google Search Console: ${g ? "connected" : googleConfigured(c.env) ? "not connected (use gsc_connect)" : "not available yet"}`,
+      `White-label PDF reports: ${tier.whiteLabelReports ? "included" : "not included in this plan"}`, `Account details: ${accountUrl(c.env)}`].join("\n");
     return [`Plan: ${tier.name} ($${tier.priceUsdMonthly}/mo)`, `Usage ${periodOf()}: ${used} / ${tier.monthlyCalls} tool calls (resets ${periodResetIso()})`,
       `Rate limit: ${tier.perMinute} requests/minute; keys allowed: ${tier.maxKeys}`, `Google Search Console: ${g ? "connected" : googleConfigured(c.env) ? "not connected (use gsc_connect)" : "not available yet"}`,
       `White-label PDF reports: ${tier.whiteLabelReports ? "included" : "Agency plan"}`, nt ? `Upgrade: ${nt.name} $${nt.priceUsdMonthly}/mo = ${nt.monthlyCalls.toLocaleString("en-US")} calls -> ${upgradeUrl(c.env)}` : "You are on the top plan."].join("\n");
@@ -80,8 +85,11 @@ export function registerHostedTools(server: McpServer, c: ToolCtx) {
   }
 
   // ---- White-label reports (Agency) ----
-  const agencyOnly = () => tier.whiteLabelReports ? null : fail(`White-label PDF reports are part of the Agency plan ($99/mo). Upgrade: ${upgradeUrl(c.env)}`);
-  server.tool("set_report_branding", "Agency plan: set the white-label branding used on PDF reports (agency name, logo URL, colours, footer).",
+  const agencyOnly = () => tier.whiteLabelReports ? null : fail(hide
+    ? `White-label PDF reports are not included in this key's current plan. See your account page: ${accountUrl(c.env)}`
+    : `White-label PDF reports are part of the Agency plan ($${TIERS.agency.priceUsdMonthly}/mo). Upgrade: ${upgradeUrl(c.env)}`);
+  const agencyLabel = hide ? "Agency accounts" : "Agency plan";
+  server.tool("set_report_branding", `${agencyLabel}: set the white-label branding used on PDF reports (agency name, logo URL, colours, footer).`,
     { agency_name: z.string().min(1).max(80), logo_url: z.string().url().optional().describe("Public PNG or JPG"), primary_color: z.string().optional().describe("#RRGGBB"),
       accent_color: z.string().optional().describe("#RRGGBB"), footer_text: z.string().max(140).optional(), website: z.string().max(120).optional() }, ANNOTATIONS["set_report_branding"],
     async a => { const d = agencyOnly(); if (d) return d;
@@ -89,7 +97,7 @@ export function registerHostedTools(server: McpServer, c: ToolCtx) {
       if (a.logo_url) { try { assertPublicUrl(a.logo_url); } catch (e) { return fail((e as Error).message); } }
       await c.store.saveBranding(c.principal.accountId, { agency_name: a.agency_name, logo_url: a.logo_url ?? null, primary_color: a.primary_color ?? "#1F3A5F", accent_color: a.accent_color ?? "#F2A541", footer_text: a.footer_text ?? null, website: a.website ?? null });
       return text(`Branding saved for ${a.agency_name}. New reports from any key on this account will use it.`); });
-  server.tool("create_white_label_report", "Agency plan: turn Markdown (e.g. the output of other Cygnix tools) into a client-ready PDF with your agency's logo, colours and name. Returns a private download link valid 30 days.",
+  server.tool("create_white_label_report", `${agencyLabel}: turn Markdown (e.g. the output of other Cygnix tools) into a client-ready PDF with your agency's logo, colours and name. Returns a private download link valid 30 days.`,
     { title: z.string().min(1).max(90), client_name: z.string().max(80).optional(), content_markdown: z.string().min(1).max(200_000) }, ANNOTATIONS["create_white_label_report"],
     async a => { const d = agencyOnly(); if (d) return d;
       try {

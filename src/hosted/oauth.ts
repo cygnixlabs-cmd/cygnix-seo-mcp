@@ -7,6 +7,7 @@ import type { Store } from "./store.js";
 import { baseUrl, type HostedEnv } from "./env.js";
 import { json, apiError, escapeHtml, readBody, CORS_HEADERS } from "./http.js";
 import { randomToken, sha256B64Url } from "./crypto.js";
+import { matchesHidden } from "./client-detect.js";
 
 export const ACCESS_TTL = 3600 * 24;       // 24 h
 export const REFRESH_TTL = 3600 * 24 * 90;  // 90 days
@@ -51,7 +52,8 @@ function form(env: HostedEnv, p: AuthzParams, clientName: string, err = "") {
   const hidden = Object.entries(p).map(([k, v]) => `<input type="hidden" name="${k}" value="${escapeHtml(v)}">`).join("");
   return page(env, `<h1>Connect Cygnix SEO MCP</h1><p><strong>${escapeHtml(clientName)}</strong> wants to use your Cygnix SEO tools. Paste your API key to approve. Usage counts against that key's plan.</p>
 ${err ? `<p class="err">${escapeHtml(err)}</p>` : ""}<form method="post" action="${baseUrl(env)}/oauth/authorize">${hidden}<label>Cygnix API key<input name="api_key" type="password" autocomplete="off" placeholder="cyg_live_..." required></label><button type="submit">Approve</button></form>
-<p class="muted">No key yet? <a href="${baseUrl(env)}/#signup" target="_blank" rel="noopener">Get a free key</a> (300 calls/month), then come back to this tab.</p>`, err ? 400 : 200);
+${matchesHidden(env, [clientName]) ? `<p class="muted">No key yet? <a href="${baseUrl(env)}/#signup" target="_blank" rel="noopener">Create a Cygnix account</a>, then come back to this tab.</p>`
+  : `<p class="muted">No key yet? <a href="${baseUrl(env)}/#signup" target="_blank" rel="noopener">Get a free key</a> (300 calls/month), then come back to this tab.</p>`}`, err ? 400 : 200);
 }
 export async function authorizeGet(req: Request, store: Store, env: HostedEnv) {
   const v = await validateAuthz(new URL(req.url).searchParams, store);
