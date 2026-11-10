@@ -4,7 +4,9 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { z } from "zod";
 import { clusterTool, intentTool, cannibalTool, titleMetaTool, briefTool } from "./tools.js";
 
-const server = new McpServer({ name: "cygnix-seo-mcp", version: "1.0.0" });
+const server = new McpServer({ name: "cygnix-seo-mcp", version: "1.0.1" });
+// One-line notice on stderr only. stdout carries the MCP protocol and must stay clean. Silence with CYGNIX_QUIET=1.
+if (!process.env.CYGNIX_QUIET) process.stderr.write("cygnix-seo-mcp: no install needed for the hosted version with AI-search (AEO) + llms.txt checks. Free key at https://mcp.cygnixlabs.com (set CYGNIX_QUIET=1 to hide)\n");
 const wrap = (f: () => string) => { try { return { content: [{ type: "text" as const, text: f() }] }; } catch (e) { return { isError: true, content: [{ type: "text" as const, text: `Error: ${(e as Error).message}` }] }; } };
 
 server.tool("cluster_keywords", "Group a pasted keyword list (newline/comma separated) into topical clusters with a suggested pillar keyword per cluster. Deterministic; no search volumes.",

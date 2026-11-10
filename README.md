@@ -1,5 +1,8 @@
 # Cygnix SEO MCP: free SEO tools for Claude, Cursor & any MCP client
 
+> **New: hosted version, no install.** Use these tools plus AI-search (AEO) readiness and llms.txt checks from Claude, ChatGPT, Cursor, Claude Code or VS Code by connecting one URL: `https://mcp.cygnixlabs.com/mcp`. **[Get a free key](https://mcp.cygnixlabs.com/#signup)** (300 calls/month) · [Connect in 2 minutes](https://mcp.cygnixlabs.com/connect.html). Live Google Search Console is coming soon. This local package stays free and works exactly as before.
+
+
 [![npm](https://img.shields.io/npm/v/cygnix-seo-mcp)](https://www.npmjs.com/package/cygnix-seo-mcp) [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 **5 no-API-key SEO tools** that work on *your* data: paste keywords, a Google Search Console export or your titles, and get clusters, intent, cannibalization fixes, CTR checks and content briefs. Everything is deterministic and runs locally. No accounts, no tracking, and no made-up search volumes.
@@ -13,6 +16,18 @@ Built by **[Cygnix Labs](https://cygnixlabs.com)**. Done-for-you SEO + AEO servi
 | `find_keyword_cannibalization` | Reads GSC CSV (Query + Page) and flags queries where your own pages compete, ranked HIGH/MEDIUM/LOW, with a fix |
 | `check_title_meta` | Scores title tags and meta descriptions (0–100): char + pixel truncation, keyword placement, CTR hooks |
 | `content_brief_outline` | Builds a brief from your keyword: intent, title options, meta draft, slug, H2 outline, questions to answer, on-page checklist |
+
+## Hosted or local?
+
+| | Hosted (`https://mcp.cygnixlabs.com/mcp`) | Local (this npm package) |
+|---|---|---|
+| Install | None. Paste a URL | `npx -y cygnix-seo-mcp` |
+| Works in | Claude, ChatGPT, Cursor, Claude Code, VS Code | Any stdio MCP client |
+| Tools | 5 core + AI-search (AEO) readiness, llms.txt check, account status, white-label PDF reports (Agency) | 5 core |
+| Live Search Console | Coming soon | – |
+| Price | Free 300 calls/mo; Pro $15, Growth $39, Agency $99 | Free |
+
+The startup notice on stderr can be hidden with `CYGNIX_QUIET=1`. It never touches stdout, so the MCP protocol is unaffected.
 
 ## Install
 
