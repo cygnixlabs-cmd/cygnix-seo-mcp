@@ -45,7 +45,7 @@ export const createWhop: ProviderFactory = (env, fetchImpl) => {
       if (!type.startsWith("membership.")) return [];
       const state = type === "membership.activated" ? "active" : type === "membership.deactivated" ? "ending" : "pending";
       return [{ provider: "whop", eventId: e.id || h.get("webhook-id")!, eventType: type, accountId: d.metadata?.account_id ?? null,
-        subscriptionId: d.id ?? null, customerId: d.user?.id ?? null, planId: d.plan?.id ?? d.plan_id ?? null, state,
+        subscriptionId: d.id ?? null, customerId: d.user?.id ?? null, planId: d.plan?.id ?? d.plan_id ?? d.variant?.id ?? d.variant_id ?? null, state,
         status: d.status || type.split(".")[1], paidThrough: state === "ending" ? null : isoToSec(d.renewal_period_end) }];
     },
   };

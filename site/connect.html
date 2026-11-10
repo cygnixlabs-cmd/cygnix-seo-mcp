@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Connect Cygnix SEO MCP to Claude, ChatGPT, Cursor, Claude Code and VS Code</title><meta name="description" content="Copy-paste setup for the Cygnix SEO remote MCP server in Claude, ChatGPT, Cursor, Claude Code and VS Code."><link rel="canonical" href="https://mcp.cygnixlabs.com/connect.html">
+<meta property="og:title" content="Connect Cygnix SEO MCP to Claude, ChatGPT, Cursor, Claude Code and VS Code"><meta property="og:description" content="Copy-paste setup for the Cygnix SEO remote MCP server in Claude, ChatGPT, Cursor, Claude Code and VS Code."><meta property="og:type" content="website">
+<link rel="stylesheet" href="/styles.css"></head><body>
+<div class="draft">Draft, pending legal review. Cygnix Labs LLC is being formed. Paid plans open when billing goes live.</div>
+<header class="top"><div class="wrap"><a class="logo" href="/">Cygnix<span>.</span> SEO MCP</a><nav><a href="/#tools">Tools</a><a href="/#pricing">Pricing</a><a href="/connect.html">Connect</a><a href="https://skills.cygnixlabs.com">Skills</a><a class="btn" href="/#signup">Get a free key</a></nav></div></header>
+
+<main><section class="hero"><div class="wrap"><h1>Connect in 2 minutes</h1>
+<p class="lead">You need the server URL <code>https://mcp.cygnixlabs.com/mcp</code> and an API key. <a href="/#signup">Get a free key</a> if you don't have one yet.</p></div></section>
+<section style="padding-top:0"><div class="wrap">
+<div class="tabs" role="tablist">
+<button role="tab" aria-selected="true" data-p="claude">Claude</button><button role="tab" aria-selected="false" data-p="chatgpt">ChatGPT</button><button role="tab" aria-selected="false" data-p="cursor">Cursor</button><button role="tab" aria-selected="false" data-p="code">Claude Code</button><button role="tab" aria-selected="false" data-p="vscode">VS Code</button><button role="tab" aria-selected="false" data-p="other">Other / API</button></div>
+
+<div class="card panel on" id="p-claude"><h2>Claude (web and desktop)</h2>
+<ol class="steps"><li>Open <strong>Settings → Connectors</strong> and click <strong>Add custom connector</strong>.</li>
+<li>Name it <strong>Cygnix SEO</strong> and set the URL to <code>https://mcp.cygnixlabs.com/mcp</code>.</li>
+<li>Under Authentication choose <strong>Sign in now</strong> (OAuth). Claude opens a Cygnix page; paste your API key and click <strong>Approve</strong>.<br><span class="muted">If your organization has request headers instead: choose <em>No sign-in</em>, add header <code>Authorization</code> with value <code>Bearer cyg_live_YOUR_KEY</code>.</span></li>
+<li>In a chat, enable the connector from the tools menu and ask: <em>“Use Cygnix SEO to check AI-search readiness for https://example.com”</em>.</li></ol></div>
+
+<div class="card panel" id="p-chatgpt"><h2>ChatGPT (web)</h2>
+<ol class="steps"><li>Turn on <strong>Developer mode</strong> in Settings (Security and login → Developer mode; plan and workspace permissions apply).</li>
+<li>Open <strong>Plugins / Apps</strong>, click <strong>+</strong> then <strong>Add custom MCP server</strong>.</li>
+<li>Server URL: <code>https://mcp.cygnixlabs.com/mcp</code>. Authentication: <strong>OAuth</strong>. ChatGPT registers itself automatically.</li>
+<li>When the Cygnix page opens, paste your API key and approve. Then in a chat type <strong>@Cygnix SEO</strong> and ask, for example, <em>“cluster these keywords: …”</em>.</li></ol>
+<p class="muted">ChatGPT desktop and Codex can also send the key as a bearer token from an environment variable instead of OAuth.</p></div>
+
+<div class="card panel" id="p-cursor"><h2>Cursor</h2><p>Add this to <code>~/.cursor/mcp.json</code> (all projects) or <code>.cursor/mcp.json</code> (one project), then reload MCP servers in Settings → MCP.</p>
+<pre>{
+  "mcpServers": {
+    "cygnix-seo": {
+      "url": "https://mcp.cygnixlabs.com/mcp",
+      "headers": { "Authorization": "Bearer cyg_live_YOUR_KEY" }
+    }
+  }
+}</pre></div>
+
+<div class="card panel" id="p-code"><h2>Claude Code</h2><p>One command (HTTP transport):</p>
+<pre>claude mcp add --transport http cygnix-seo https://mcp.cygnixlabs.com/mcp \
+  --header "Authorization: Bearer cyg_live_YOUR_KEY"</pre>
+<p>Add <code>--scope user</code> to use it in every project. Check with <code>claude mcp list</code>, then run <code>/mcp</code> inside Claude Code.</p></div>
+
+<div class="card panel" id="p-vscode"><h2>VS Code (Copilot agent mode)</h2><p>Create <code>.vscode/mcp.json</code>. VS Code prompts for the key once and stores it securely:</p>
+<pre>{
+  "inputs": [
+    { "type": "promptString", "id": "cygnix-key", "description": "Cygnix API key", "password": true }
+  ],
+  "servers": {
+    "cygnix-seo": {
+      "type": "http",
+      "url": "https://mcp.cygnixlabs.com/mcp",
+      "headers": { "Authorization": "Bearer ${input:cygnix-key}" }
+    }
+  }
+}</pre><p>Open the Chat view, switch to <strong>Agent</strong> mode and enable the Cygnix tools.</p></div>
+
+<div class="card panel" id="p-other"><h2>Any MCP client or the API</h2><p>Transport: <strong>Streamable HTTP</strong> (stateless, JSON responses). Auth: <code>Authorization: Bearer cyg_live_YOUR_KEY</code> or <code>X-Api-Key</code>, or OAuth 2.1 (metadata at <code>/.well-known/oauth-authorization-server</code>, dynamic client registration, PKCE S256).</p>
+<pre>curl -s https://mcp.cygnixlabs.com/mcp \
+  -H "Authorization: Bearer cyg_live_YOUR_KEY" -H "Content-Type: application/json" \
+  -H "Accept: application/json, text/event-stream" \
+  -d '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"account_status","arguments":{}}}'</pre>
+<p>Prefer local? <code>npx -y cygnix-seo-mcp</code> runs the five core tools over stdio for free.</p></div>
+
+<div class="card" style="margin-top:18px"><h3>Then connect Google Search Console (optional, one click)</h3><p>Ask your assistant to <em>“connect my Search Console”</em>. It calls <code>gsc_connect</code> and gives you a Google link. Approve read-only access and you're done. You can disconnect any time with <code>gsc_disconnect</code> or at myaccount.google.com/permissions.</p></div>
+<div class="card" style="margin-top:18px"><h3>Try these prompts</h3><ul>
+<li>“Find keyword cannibalization on sc-domain:example.com for the last 90 days and tell me which pages to merge.”</li>
+<li>“Can ChatGPT and Perplexity cite https://example.com/pricing? Fix what blocks them.”</li>
+<li>“Check our llms.txt and write a better one.”</li>
+<li>“Turn this audit into a branded PDF for Client Co.” (Agency)</li></ul></div>
+</div></section></main>
+<script>document.querySelectorAll(".tabs button").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll(".tabs button").forEach(x=>x.setAttribute("aria-selected",x===b));document.querySelectorAll(".panel").forEach(p=>p.classList.toggle("on",p.id==="p-"+b.dataset.p))}));
+if(location.hash){const b=document.querySelector('.tabs button[data-p="'+location.hash.slice(1)+'"]');if(b)b.click()}</script>
+<footer><div class="wrap"><a href="/privacy.html">Privacy</a><a href="/terms.html">Terms</a><a href="/connect.html">Connect guide</a><a href="https://skills.cygnixlabs.com">skills.cygnixlabs.com</a><a href="https://github.com/cygnixlabs-cmd/cygnix-seo-mcp">GitHub</a><a href="mailto:info@cygnixlabs.com">info@cygnixlabs.com</a><p>© 2026 Cygnix Labs. Independent product, not affiliated with Google, OpenAI or Anthropic.</p></div></footer>
+
+</body></html>
