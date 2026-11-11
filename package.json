@@ -11,7 +11,9 @@
     "hosted:dev": "node dist/hosted/node.js",
     "admin": "node dist/hosted/admin-cli.js",
     "worker:dev": "npx wrangler@4 dev",
-    "worker:check": "npx wrangler@4 deploy --dry-run --outdir .wrangler/dry-run"
+    "worker:check": "npx wrangler@4 deploy --dry-run --outdir .wrangler/dry-run",
+    "bundle:cpanel": "npm run build && node scripts/build-cpanel-bundle.mjs",
+    "hosted:start": "node app.cjs"
   },
   "keywords": [
     "mcp",
@@ -40,6 +42,7 @@
   },
   "devDependencies": {
     "@types/node": "^26.6.5",
+    "mysql2": "^3.24.6",
     "typescript": "^5.9.3"
   },
   "mcpName": "io.github.cygnixlabs-cmd/cygnix-seo-mcp",

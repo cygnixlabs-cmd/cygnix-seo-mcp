@@ -2,28 +2,29 @@
 
 Nothing here has been done for you. No accounts were created, no money spent, no DNS changed, nothing deployed.
 Every provider stays **inert** until its env vars are set, and `GET /health` shows what is live.
-Secrets are set with `npx wrangler@4 secret put NAME`. Never commit them.
+Secrets go into cPanel -> Setup Node.js App -> Environment variables (or `npx wrangler@4 secret put NAME` on the Workers path). Never commit them.
 
 ## 0. Review and merge
 - [ ] Review the PR `feat/hosted-remote-mcp`. The stdio/npm package is unchanged and stays at v1.0.0; nothing is published.
 - [ ] Get the **Privacy Policy** and **Terms** legally reviewed. Source: `skills-desk/launch-kit/legal/privacy.md` + `terms.md` (v0.2, now covering one-time/crypto/Payoneer payments and the client-name hint); `site/privacy.html` / `site/terms.html` are generated from them. Fill in the operator's legal name (you as an individual in Kuwait, or the company once formed), address, governing law and venue, the record-retention period, and the manual-activation time. Then remove the DRAFT banners (`site/*.html`, the `.draft` div and `.pill`).
 
-## 1. Cloudflare (host): free to start
-- [ ] Create a Cloudflare account (free).
-- [ ] **Recommended at launch: Workers Paid, $5/month.** The Free plan's 10 ms CPU limit can cut off PDF reports and large Search Console pulls. Free is fine for staging. See `docs/hosting.md`.
-- [ ] Follow "Deploy" in `docs/hosting.md`: `wrangler login`, `d1 create`, paste the `database_id` into `wrangler.toml`, `d1 migrations apply --remote`, set the secrets, `wrangler deploy`.
-- [ ] Set `ADMIN_TOKEN` (`openssl rand -hex 32`) and `TOKEN_ENCRYPTION_KEY` (`openssl rand -base64 32`). **Back up `TOKEN_ENCRYPTION_KEY`:** if it's lost, every stored Google connection must be redone.
+## 1. Host: host.com.pk cPanel "Setup Node.js App" ($0, decided 11 Nov)
+DNS stays at host.com.pk. No nameserver move, no Cloudflare account, no Workers Paid. Full guide: `docs/hosting.md` Option A and `skills-desk/mcp-hostpk-deploy.md`.
+- [ ] cPanel -> Software: confirm **Setup Node.js App** is there and note the highest Node.js version offered (need 22.13+ for SQLite; otherwise use MySQL). If it's missing, ask host.com.pk support to enable it; if they quote a price, stop and tell the agent.
+- [ ] cPanel -> **Domains** -> Create A New Domain: `mcp.cygnixlabs.com` (own document root, not shared).
+- [ ] cPanel -> **SSL/TLS Status** -> `mcp.cygnixlabs.com` -> **Run AutoSSL** (free Let's Encrypt, already used by this account).
+- [ ] Setup Node.js App -> Create: Node 24.x (or 22.x >= 22.13), Production, root `mcp-app`, URL `mcp.cygnixlabs.com`, startup file `app.cjs` -> Stop App.
+- [ ] File Manager -> `~/mcp-app` -> upload `cygnix-seo-mcp-cpanel.zip` -> Extract -> delete the zip -> **Run NPM Install**.
+- [ ] Generate `ADMIN_TOKEN` (`openssl rand -hex 32`) and `TOKEN_ENCRYPTION_KEY` (`openssl rand -base64 32`) in cPanel -> Terminal (or any computer). **Back up `TOKEN_ENCRYPTION_KEY`.**
+- [ ] Enter the environment variables (docs/hosting.md Option A table) -> Save -> **Restart**.
+- [ ] Optional MySQL instead of SQLite: cPanel -> MySQL Databases -> DB `<cpuser>_mcp` + user with ALL PRIVILEGES -> `HOSTED_DB_DRIVER=mysql` + `MYSQL_*`.
 
-## 2. DNS for mcp.cygnixlabs.com
-cygnixlabs.com DNS is currently at host.com.pk (`ns915–ns918.host.com.pk`). Existing records include `A @ 85.187.128.22` and `CNAME skills → cygnixlabs-cmd.github.io`.
-
-**Option A (recommended, $0):** move the zone to Cloudflare.
-- [ ] Cloudflare dashboard → Add a domain → `cygnixlabs.com` → Free plan. Check that the imported records match host.com.pk **exactly**, including `@` A, `skills` CNAME (set it to **DNS only / grey cloud** so GitHub Pages keeps its certificate), and all MX/TXT (email, SPF, DKIM, DMARC).
-- [ ] At the registrar (host.com.pk), replace the 4 nameservers with the 2 Cloudflare gives you. Wait until Cloudflare shows the zone as Active.
-- [ ] Uncomment the `[[routes]]` block in `wrangler.toml` (`pattern = "mcp.cygnixlabs.com"`, `custom_domain = true`) and run `npx wrangler@4 deploy`. Wrangler creates the record and TLS certificate for **`mcp.cygnixlabs.com`** itself. Don't add an A/CNAME by hand.
-
-**Option B (keep DNS at host.com.pk):** deploy `Dockerfile.hosted` to Fly.io (~$2–5/month with a volume) or Render (~$7/month plus disk). Then add one record at host.com.pk:
-- [ ] `CNAME  mcp  <your-app>.fly.dev` (or the Render hostname), TTL 3600.
+## 2. DNS for mcp.cygnixlabs.com (host.com.pk Zone Editor)
+cygnixlabs.com DNS is at host.com.pk (`ns915–ns918.host.com.pk`, served by the same cPanel server 85.187.128.22). Keep every existing record as is.
+- [ ] Zone Editor -> check this record exists (cPanel adds it in step 1 when the subdomain is created); add it only if missing:
+  `A   mcp.cygnixlabs.com.   85.187.128.22   TTL 14400`
+- No CNAME, TXT or CAA record is needed (no CAA exists on the domain, so Let's Encrypt can issue). Don't add an `mcp` CNAME while the A record exists.
+- Fallback only (if Setup Node.js App is unavailable): replace the A record with `CNAME mcp <service>.onrender.com` (TTL 3600) after deploying `Dockerfile.hosted` on Render free. Read the cost notes in `skills-desk/mcp-hostpk-deploy.md` first.
 
 Then check: `curl https://mcp.cygnixlabs.com/health`.
 
@@ -41,7 +42,7 @@ Needs: a **PayPal Business account** (personal accounts can't use the Subscripti
 - [ ] developer.paypal.com → **Apps & Credentials** → create an app (do Sandbox first, then Live). Copy **Client ID** and **Secret** → `PAYPAL_CLIENT_ID`, `PAYPAL_CLIENT_SECRET`.
 - [ ] Create the product and 3 monthly plans. Either run `PAYPAL_ENV=sandbox PAYPAL_CLIENT_ID=… PAYPAL_CLIENT_SECRET=… node scripts/paypal-create-plans.mjs`, or use the dashboard (Pay & Get Paid → Subscriptions → Create plan): Pro **$15**, Growth **$39**, Agency **$99**, monthly, no setup fee. Set the IDs → `PAYPAL_PLAN_PRO`, `PAYPAL_PLAN_GROWTH`, `PAYPAL_PLAN_AGENCY`.
 - [ ] In the same app → **Webhooks** → Add webhook: URL **`https://mcp.cygnixlabs.com/webhooks/paypal`**. Events: `BILLING.SUBSCRIPTION.ACTIVATED`, `BILLING.SUBSCRIPTION.UPDATED`, `BILLING.SUBSCRIPTION.RE-ACTIVATED`, `BILLING.SUBSCRIPTION.CANCELLED`, `BILLING.SUBSCRIPTION.SUSPENDED`, `BILLING.SUBSCRIPTION.EXPIRED`, `BILLING.SUBSCRIPTION.PAYMENT.FAILED`. Copy the **Webhook ID** → `PAYPAL_WEBHOOK_ID`.
-- [ ] Test with sandbox buyer accounts (`PAYPAL_ENV=sandbox`). When it works, repeat with Live credentials, plans and webhook, and set `PAYPAL_ENV = "live"` in `wrangler.toml`.
+- [ ] Test with sandbox buyer accounts (`PAYPAL_ENV=sandbox`). When it works, repeat with Live credentials, plans and webhook, and set `PAYPAL_ENV=live` in the app's environment variables (or `wrangler.toml` on Workers).
 - Fees: PayPal's standard commercial rates for your country, plus currency conversion. Payouts go to your PayPal balance and then to your bank.
 
 ## 4. Whop (second, non-Stripe provider)
@@ -51,7 +52,7 @@ Why Whop over Lemon Squeezy: Lemon Squeezy is moving merchants to Stripe Managed
 - [ ] Developer settings → create an **API key** that can create checkout configurations → `WHOP_API_KEY`.
 - [ ] Create a webhook: URL **`https://mcp.cygnixlabs.com/webhooks/whop`**, events `membership.activated`, `membership.deactivated`, API version date pinned to **2026-10-09** or the closest date before plans were renamed to variants (the code sends `plan_id` with `Api-Version-Date: 2026-10-09-2`). Copy the `ws_…` secret → `WHOP_WEBHOOK_SECRET`.
 - [ ] Test in Whop's sandbox first (`WHOP_API_BASE=https://sandbox-api.whop.com/api/v1` with sandbox keys).
-- To make Whop the default checkout, set `BILLING_PROVIDER = "whop"` in `wrangler.toml`. Otherwise PayPal is used and Whop can be chosen per request (`provider: "whop"`).
+- To make Whop the default checkout, set `BILLING_PROVIDER=whop` in the environment variables. Otherwise PayPal is used and Whop can be chosen per request (`provider: "whop"`).
 
 ## 5. Stripe (later, via the US LLC)
 - [ ] After the LLC and its Stripe account exist: create a product with 3 monthly prices ($15/$39/$99) → `STRIPE_PRICE_PRO`, `STRIPE_PRICE_GROWTH`, `STRIPE_PRICE_AGENCY`. Use the secret key → `STRIPE_SECRET_KEY`.
@@ -69,9 +70,10 @@ Launch without it: leave `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` unset so th
 - [ ] Keep `TOKEN_ENCRYPTION_KEY` set (step 1). Without it, Google stays inert.
 
 ## 7. Env var summary
-| Var | Where | Required for |
+| Var | Where (cPanel: all go in Setup Node.js App -> Environment variables) | Required for |
 |---|---|---|
 | `PUBLIC_BASE_URL` | wrangler.toml `[vars]` | always (`https://mcp.cygnixlabs.com`) |
+| `HOSTED_DB_DRIVER`, `HOSTED_DB`, `MYSQL_HOST/DATABASE/USER/PASSWORD` or `MYSQL_URL`, `DCV_WEBROOT` | cPanel env | Node hosts only: storage (sqlite default / mysql); DCV_WEBROOT optional (AutoSSL file passthrough) |
 | `ADMIN_TOKEN` | secret | `/admin/*` + admin CLI |
 | `TOKEN_ENCRYPTION_KEY` | secret | Google OAuth (encrypts refresh tokens, signs state) |
 | `BILLING_PROVIDER` | `[vars]` | default checkout provider (any enabled id) |
@@ -104,4 +106,4 @@ Launch without it: leave `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` unset so th
 Nothing public until `https://mcp.cygnixlabs.com/health` answers. Then, one step at a time (paste-ready drafts in `skills-desk/launch-kit/submissions/`):
 1. go live → 2. `npm publish` 1.0.1 → 3. official MCP Registry (`mcp-publisher publish`) → 4. Glama → 5. mcp.so (free) → 6. MCP Marketplace (free) → 7. Claude directory → 8. ChatGPT plugin directory → 9. Agensi + Apify links.
 Skipped: MCPize (rev-share hosting) and Smithery (curated). PulseMCP picks the server up from the registry. Free listings only.
-- ChatGPT: prices are hidden automatically for ChatGPT clients (`HIDE_PRICES_FOR_CLIENTS`). Domain verification: put the portal's token in `OPENAI_APPS_CHALLENGE` and deploy; it's served at `/.well-known/openai-apps-challenge`.
+- ChatGPT: prices are hidden automatically for ChatGPT clients (`HIDE_PRICES_FOR_CLIENTS`). Domain verification: put the portal's token in `OPENAI_APPS_CHALLENGE` and restart the app; it's served at `/.well-known/openai-apps-challenge`.
