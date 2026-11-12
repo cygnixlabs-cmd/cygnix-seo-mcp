@@ -1,6 +1,6 @@
 # Cygnix SEO MCP: free SEO tools for Claude, Cursor & any MCP client
 
-> **New: hosted version, no install.** Use these tools plus AI-search (AEO) readiness and llms.txt checks from Claude, ChatGPT, Cursor, Claude Code or VS Code by connecting one URL: `https://mcp.cygnixlabs.com/mcp`. **[Get a free key](https://mcp.cygnixlabs.com/#signup)** (300 calls/month) · [Connect in 2 minutes](https://mcp.cygnixlabs.com/connect.html). Live Google Search Console is coming soon. This local package stays free and works exactly as before.
+> **New: hosted version, no install.** Use these tools plus 19 hosted SEO and AI-search tools (31 once Google OAuth is enabled) from Claude, ChatGPT, Cursor, Claude Code or VS Code by connecting one URL: `https://mcp.cygnixlabs.com/mcp`. **[Get a free key](https://mcp.cygnixlabs.com/#signup)** (300 calls/month) · [Connect in 2 minutes](https://mcp.cygnixlabs.com/connect). Live Google Search Console is coming soon. This local package stays free and works exactly as before.
 
 
 [![npm](https://img.shields.io/npm/v/cygnix-seo-mcp)](https://www.npmjs.com/package/cygnix-seo-mcp) [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
@@ -23,9 +23,9 @@ Built by **[Cygnix Labs](https://cygnixlabs.com)**. Done-for-you SEO + AEO servi
 |---|---|---|
 | Install | None. Paste a URL | `npx -y cygnix-seo-mcp` |
 | Works in | Claude, ChatGPT, Cursor, Claude Code, VS Code | Any stdio MCP client |
-| Tools | 5 core + AI-search (AEO) readiness, llms.txt check, account status, white-label PDF reports (Agency) | 5 core |
+| Tools | 19 now (AI-search / AEO readiness, llms.txt, on-page and technical SEO, Core Web Vitals, algorithm updates, account tools, Agency white-label PDFs); 31 once Google OAuth is enabled (12 live Search Console tools) | 5 core |
 | Live Search Console | Coming soon | – |
-| Price | Free 300 calls/mo; Pro $15, Growth $39, Agency $99 | Free |
+| Price | Free plan (300 calls/mo) available now. Paid plans Pro $15 / Growth $39 / Agency $99, PayPal billing coming soon. | Free |
 
 The startup notice on stderr can be hidden with `CYGNIX_QUIET=1`. It never touches stdout, so the MCP protocol is unaffected.
 
