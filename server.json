@@ -2,18 +2,18 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.cygnixlabs-cmd/cygnix-seo-mcp",
   "title": "Cygnix SEO",
-  "description": "SEO + AEO tools: keyword clustering, intent, cannibalization, meta checks, briefs. Local or hosted.",
+  "description": "SEO + AEO: 31 hosted tools, Search Console rolling out; keywords, briefs. Local or hosted.",
   "repository": {
     "url": "https://github.com/cygnixlabs-cmd/cygnix-seo-mcp",
     "source": "github"
   },
   "websiteUrl": "https://mcp.cygnixlabs.com",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "packages": [
     {
       "registryType": "npm",
       "identifier": "cygnix-seo-mcp",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "transport": {
         "type": "stdio"
       }

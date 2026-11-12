@@ -1,6 +1,6 @@
 {
   "name": "cygnix-seo-mcp",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Free no-API-key SEO MCP server: keyword clustering, search intent, GSC cannibalization finder, title/meta CTR checker, content briefs. By Cygnix Labs.",
   "main": "dist/index.js",
   "scripts": {
