@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /reports/
+Disallow: /oauth/
+Disallow: /admin/
+
+Sitemap: https://mcp.cygnixlabs.com/sitemap.xml

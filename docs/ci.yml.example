@@ -1,3 +1,4 @@
+# Copy to .github/workflows/ci.yml. (The bot's GitHub token lacks the `workflow` scope, so it could not push this file.)
 name: CI
 on: [push, pull_request]
 jobs:
@@ -6,5 +7,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with: { node-version: 20 }
-      - run: npm ci && npm test
+        with: { node-version: 24, cache: npm }
+      - run: npm ci
+      - run: npm test
+      - run: npx -y wrangler@4 deploy --dry-run --outdir .wrangler/dry-run   # bundle check only, no deploy

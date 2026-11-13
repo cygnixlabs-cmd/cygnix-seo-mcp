@@ -1,0 +1,37 @@
+// Shared MCP server factory: the same 5 tools for the local stdio package and the hosted remote server.
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { z } from "zod";
+import { ANNOTATIONS } from "./annotations.js";
+import { clusterTool, intentTool, cannibalTool, titleMetaTool, briefTool } from "./tools.js";
+
+export const SERVER_NAME = "cygnix-seo-mcp";
+export const SERVER_VERSION = "1.0.0";
+export const TOOL_NAMES = ["cluster_keywords", "classify_search_intent", "find_keyword_cannibalization", "check_title_meta", "content_brief_outline"] as const;
+
+/** Strips the marketplace upsell footer (see tools.ts `footer`) for clients that must not see purchase CTAs, e.g. ChatGPT. */
+export const stripUpsell = (t: string) => t.replace(/\n---\nFull workflow: [^\n]*$/, "");
+const wrap = (f: () => string, hideUpsell = false) => {
+  try { const t = f(); return { content: [{ type: "text" as const, text: hideUpsell ? stripUpsell(t) : t }] }; }
+  catch (e) { return { isError: true, content: [{ type: "text" as const, text: `Error: ${(e as Error).message}` }] }; }
+};
+
+export function createSeoServer(opts: { instructions?: string; hideUpsell?: boolean } = {}): McpServer {
+  const server = new McpServer({ name: SERVER_NAME, version: SERVER_VERSION }, opts.instructions ? { instructions: opts.instructions } : undefined);
+  const w = (f: () => string) => wrap(f, !!opts.hideUpsell);
+  server.tool("cluster_keywords", "Group a pasted keyword list (newline/comma separated) into topical clusters with a suggested pillar keyword per cluster. Deterministic; no search volumes.",
+    { keywords: z.string().describe("Keywords, one per line or comma separated"), min_shared_terms: z.number().int().min(1).max(3).optional() }, ANNOTATIONS["cluster_keywords"],
+    async ({ keywords, min_shared_terms }) => w(() => clusterTool(keywords, min_shared_terms ?? 1)));
+  server.tool("classify_search_intent", "Classify keywords as informational, commercial, transactional or navigational using modifier rules.",
+    { keywords: z.string().describe("Keywords, one per line or comma separated") }, ANNOTATIONS["classify_search_intent"],
+    async ({ keywords }) => w(() => intentTool(keywords)));
+  server.tool("find_keyword_cannibalization", "Find queries where 2+ of your pages compete, from a Google Search Console export (CSV/TSV text with Query and Page columns; clicks, impressions, position optional).",
+    { gsc_csv: z.string().describe("Pasted GSC CSV text including header row"), min_impressions: z.number().int().min(0).optional() }, ANNOTATIONS["find_keyword_cannibalization"],
+    async ({ gsc_csv, min_impressions }) => w(() => cannibalTool(gsc_csv, min_impressions ?? 10)));
+  server.tool("check_title_meta", "Check title tags and meta descriptions for length/pixel truncation, keyword placement and CTR hooks. Returns a 0-100 score with fixes.",
+    { items: z.array(z.object({ title: z.string(), meta: z.string().optional(), keyword: z.string().optional(), url: z.string().optional() })).min(1).max(100) }, ANNOTATIONS["check_title_meta"],
+    async ({ items }) => w(() => titleMetaTool(items)));
+  server.tool("content_brief_outline", "Generate a content brief (intent, title options, meta draft, H2 outline, questions, on-page checklist) for a target keyword plus optional related keywords.",
+    { keyword: z.string(), related_keywords: z.string().optional(), audience: z.string().optional(), word_count: z.number().int().min(300).max(10000).optional() }, ANNOTATIONS["content_brief_outline"],
+    async ({ keyword, related_keywords, audience, word_count }) => w(() => briefTool(keyword, related_keywords, audience, word_count)));
+  return server;
+}

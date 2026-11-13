@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Your account | Cygnix SEO MCP</title><meta name="description" content="See your Cygnix SEO MCP plan, monthly usage, limits and API keys."><meta name="robots" content="noindex"><link rel="canonical" href="https://mcp.cygnixlabs.com/account.html">
+<link rel="stylesheet" href="/styles.css"><link rel="icon" href="/icon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.png" type="image/png" sizes="64x64"></head><body>
+<div class="draft">Draft, pending legal review. Paid plans open when billing goes live.</div>
+<header class="top"><div class="wrap"><a class="logo" href="/">Cygnix<span>.</span> SEO MCP</a><nav><a href="/#tools">Tools</a><a href="/#pricing">Pricing</a><a href="/connect.html">Connect</a><a href="/account.html">Account</a><a class="btn" href="/#signup">Get a free key</a></nav></div></header>
+<!-- Informational only: no checkout on this page. It is the one link shown inside ChatGPT (OpenAI plugin rules). -->
+<main><section class="hero"><div class="wrap"><h1>Your account</h1>
+<p class="lead">Paste your API key to see your plan, this month's usage, limits and keys. The key stays in this browser tab.</p>
+<form class="inline" id="f"><input id="k" type="password" placeholder="cyg_live_..." autocomplete="off" required><button class="btn" type="submit">Show my account</button></form>
+<div class="out" id="o"></div></div></section>
+<section style="padding-top:0" id="view" hidden><div class="wrap"><div class="grid g3">
+<div class="card"><h3>Plan</h3><p id="plan"></p></div>
+<div class="card"><h3>Usage this month</h3><p id="usage"></p></div>
+<div class="card"><h3>Limits</h3><p id="limits"></p></div>
+</div>
+<div class="card" style="margin-top:16px"><h3>API keys</h3><p id="keys"></p></div>
+<div class="card" style="margin-top:16px"><h3>Orders</h3><p id="orders">None.</p></div>
+<p class="muted" style="margin-top:16px">Need a different plan? See <a href="/#pricing">plans</a>. Billing questions: <a href="mailto:info@cygnixlabs.com">info@cygnixlabs.com</a>.</p>
+</div></section></main>
+<script>
+const $=id=>document.getElementById(id);const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+$("f").addEventListener("submit",async e=>{e.preventDefault();const o=$("o");o.className="out";const h={authorization:"Bearer "+$("k").value.trim()};
+ try{const r=await fetch("/v1/account",{headers:h});const j=await r.json();if(!r.ok){o.className="out err";o.textContent=j.error?.message||"Could not load the account.";return}
+ const b=j.account.billing;$("plan").innerHTML=esc(j.plan.name)+(b.prepaid&&b.paid_through_iso?"<br>Paid through "+esc(b.paid_through_iso.slice(0,10)):b.status?"<br>Billing: "+esc(b.status)+(b.provider?" ("+esc(b.provider)+")":""):"");
+ $("usage").textContent=j.usage.calls+" of "+j.plan.monthly_calls+" tool calls (resets "+j.usage.resets_at.slice(0,10)+")";
+ $("limits").textContent=j.plan.per_minute+" requests/minute · up to "+j.plan.max_keys+" keys · white-label PDFs: "+(j.plan.white_label_reports?"yes":"no");
+ $("keys").innerHTML=j.keys.map(k=>"<code>"+esc(k.key_prefix)+"…</code> "+esc(k.label||"")+(k.last_used_at?" · last used "+new Date(k.last_used_at*1000).toISOString().slice(0,10):"")).join("<br>")||"None";
+ const r2=await fetch("/v1/billing/orders",{headers:h});if(r2.ok){const os=(await r2.json()).orders;if(os.length)$("orders").innerHTML=os.map(x=>'<a href="'+esc(x.pay_url)+'">'+esc(x.id)+"</a> · "+esc(x.tier)+" · "+esc(x.status)).join("<br>")}
+ $("view").hidden=false;}catch(err){o.className="out err";o.textContent="Network error, try again."}});
+</script>
+<footer><div class="wrap"><a href="/privacy.html">Privacy</a><a href="/terms.html">Terms</a><a href="/connect.html">Connect guide</a><a href="/account.html">Account</a><a href="https://skills.cygnixlabs.com">skills.cygnixlabs.com</a><a href="https://github.com/cygnixlabs-cmd/cygnix-seo-mcp">GitHub</a><a href="mailto:info@cygnixlabs.com">info@cygnixlabs.com</a><p>© 2026 Cygnix Labs. Independent product, not affiliated with Google, OpenAI or Anthropic.</p></div></footer>
+</body></html>

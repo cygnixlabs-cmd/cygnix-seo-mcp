@@ -1,0 +1,15 @@
+# Cygnix SEO MCP
+
+> Remote MCP server (Streamable HTTP) by Cygnix Labs with SEO and AI-search tools for Claude, ChatGPT, Cursor, Claude Code and VS Code: AEO / AI-search readiness checks, keyword cannibalization from Search Console exports (live Search Console connection coming soon), llms.txt validation, keyword clustering, search intent, title/meta checks, content briefs, and white-label PDF reports for agencies. Free tier with 300 calls a month; Pro $15, Growth $39, Agency $99 per month.
+
+## Docs
+
+- [Connect guide](https://mcp.cygnixlabs.com/connect.html): copy-paste setup for Claude, ChatGPT, Cursor, Claude Code and VS Code
+- [Pricing](https://mcp.cygnixlabs.com/#pricing): Free, Pro, Growth and Agency plans and quotas
+- [Source and local stdio version](https://github.com/cygnixlabs-cmd/cygnix-seo-mcp): open-source repo and the `npx cygnix-seo-mcp` package
+
+## Optional
+
+- [Cygnix SEO skills](https://skills.cygnixlabs.com): ready-made SEO agent skills and the $99 SEO audit
+- [Privacy policy](https://mcp.cygnixlabs.com/privacy.html): draft
+- [Terms of service](https://mcp.cygnixlabs.com/terms.html): draft

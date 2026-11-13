@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Privacy Policy (draft) | Cygnix SEO MCP</title><meta name="description" content="Draft privacy policy for the Cygnix SEO MCP service."><link rel="canonical" href="https://mcp.cygnixlabs.com/privacy.html">
+<meta property="og:title" content="Privacy Policy (draft) | Cygnix SEO MCP"><meta property="og:description" content="Draft privacy policy for the Cygnix SEO MCP service."><meta property="og:type" content="website">
+<link rel="stylesheet" href="/styles.css"><link rel="icon" href="/icon.svg" type="image/svg+xml"></head><body>
+<div class="draft">Draft, pending legal review. Paid plans open when billing goes live.</div>
+<header class="top"><div class="wrap"><a class="logo" href="/">Cygnix<span>.</span> SEO MCP</a><nav><a href="/#tools">Tools</a><a href="/#pricing">Pricing</a><a href="/connect.html">Connect</a><a href="/account.html">Account</a><a class="btn" href="/#signup">Get a free key</a></nav></div></header>
+<!-- Generated from skills-desk/launch-kit/legal/privacy.md (draft v0.2). Edit the markdown, regenerate, then remove the .draft banner and .pill after legal review. -->
+<main><section><div class="wrap legal"><p class="pill" style="background:#fff4e5;color:#7a4b00">DRAFT v0.2, pending legal review. Not yet in effect.</p>
+<h1>Privacy Policy</h1><p class="muted">Draft version 0.2, last updated 11 November 2026.</p>
+<p>Cygnix Labs ("Cygnix", "we") operates mcp.cygnixlabs.com and the Cygnix SEO MCP service (the "Service"). Operator: [legal name of the operator: the owner as an individual / sole proprietor in Kuwait, or the company once formed], [registered address], [country]. Contact: info@cygnixlabs.com.</p>
+<h2>1. What we collect</h2>
+<ul>
+<li><strong>Account data:</strong> your email address, plan, account status, and when your account and keys were created and last used.</li>
+<li><strong>API keys:</strong> stored only as one-way SHA-256 hashes, plus the first 12 characters for display. We can't recover a lost key; you rotate it instead.</li>
+<li><strong>Usage metering:</strong> the number of tool calls per key per month, and short-lived per-minute counters, used for quotas, rate limits and billing.</li>
+<li><strong>Client name:</strong> the name your AI app reports when it connects (for example <code>openai-mcp</code> or <code>claude-ai</code>) and the name an app registers for sign-in. We keep the latest one per key or connected app, to show messages that fit that app (for example, no pricing inside ChatGPT). The browser/app user-agent string is read per request and not stored.</li>
+<li><strong>Tool inputs and outputs:</strong> processed in memory to produce the result and <strong>not stored</strong>. The exception is white-label PDF reports you create on purpose, which we store for 30 days so the private link works.</li>
+<li><strong>Google Search Console (optional, coming soon):</strong> when available and you connect it, we store an OAuth refresh token encrypted with AES-256-GCM and the granted scope (<code>webmasters.readonly</code>). Search Console data is fetched when you run a tool and not retained.</li>
+<li><strong>Branding (Agency):</strong> the agency name, logo URL, colours, website and footer text you provide.</li>
+<li><strong>Billing:</strong></li>
+<li><em>Subscriptions</em> (PayPal, Whop, Stripe): we receive a subscription ID, customer ID, plan and status from the provider.</li>
+<li><em>One-time payments</em> (crypto invoices through NOWPayments, Payoneer, PayPal.me, direct crypto transfer): we keep an order record (order reference, plan, amount in USD, status, dates), the gateway's payment ID, and any payment reference you submit (for example a PayPal transaction ID or a blockchain transaction hash).</li>
+<li>We never see or store card numbers or bank logins. Blockchain transactions are public by nature; a transaction hash you give us links your order to that public transaction.</li>
+<li><strong>Technical logs:</strong> our host (Cloudflare) processes IP addresses and request metadata for security and abuse prevention. We use IP addresses to rate-limit sign-ups and payment-reference submissions.</li>
+<li><strong>Public pages you ask us to check:</strong> the AEO and llms.txt tools fetch the public URLs you supply and identify themselves as <code>CygnixSEO-MCP/1.0</code>.</li>
+</ul>
+<p>We do not use cookies or analytics trackers on mcp.cygnixlabs.com. [Update if analytics is added.]</p>
+<h2>2. How we use it</h2>
+<p>To provide and secure the Service, enforce plan limits, process payments and activate plans, answer support and billing requests, send essential service emails, and prevent abuse. We do not sell personal data, use it for advertising or profiling, or use your inputs, outputs or Search Console data to train AI models.</p>
+<h2>3. Google user data</h2>
+<p>Cygnix's use and transfer of information received from Google APIs follows the <a href="https://developers.google.com/terms/api-services-user-data-policy">Google API Services User Data Policy</a>, including the Limited Use requirements. We request read-only Search Console access, use it only to provide the features you call, do not transfer it to others except as needed to provide the Service or as required by law, and do not let humans read it unless you ask us to for support, it is needed for security, or the law requires it. Disconnect any time with the <code>gsc_disconnect</code> tool or at <a href="https://myaccount.google.com/permissions">myaccount.google.com/permissions</a>; disconnecting deletes the stored token.</p>
+<h2>4. Who we share it with</h2>
+<p>Only processors that help us run the Service:</p>
+<table class="cmp">
+<thead>
+<tr>
+<th>Recipient</th>
+<th>Why</th>
+<th>What</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cloudflare</td>
+<td>hosting, database, security</td>
+<td>all Service data</td>
+</tr>
+<tr>
+<td>The payment provider you choose: PayPal, Whop, Stripe, NOWPayments, Payoneer</td>
+<td>taking your payment</td>
+<td>what you give them at checkout; they send us IDs, plan and status</td>
+</tr>
+<tr>
+<td>Google</td>
+<td>only if you connect Search Console</td>
+<td>OAuth token exchange and the API calls you request</td>
+</tr>
+</tbody>
+</table>
+<p>We disclose data when the law requires it. Each payment provider handles your payment details under its own privacy policy.</p>
+<h2>5. AI apps you connect</h2>
+<p>When you use the Service through Claude, ChatGPT, Cursor, VS Code or another client, that provider's privacy policy covers what you send to it. Tool results we return are visible to that app.</p>
+<h2>6. Retention</h2>
+<table class="cmp">
+<thead>
+<tr>
+<th>Data</th>
+<th>Kept for</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Account, order and billing records</td>
+<td>while your account is active, then as long as tax and accounting law requires [owner: confirm period for Kuwait]</td>
+</tr>
+<tr>
+<td>Usage counters</td>
+<td>up to 24 months</td>
+</tr>
+<tr>
+<td>Rate-limit windows</td>
+<td>about 1 day</td>
+</tr>
+<tr>
+<td>OAuth codes / access tokens / refresh tokens</td>
+<td>10 minutes / 24 hours / 90 days or until revoked</td>
+</tr>
+<tr>
+<td>PDF reports</td>
+<td>30 days</td>
+</tr>
+<tr>
+<td>Client name hint</td>
+<td>until replaced by the next connection, or account deletion</td>
+</tr>
+<tr>
+<td>Revoked keys</td>
+<td>kept as hashes so they can't be reused</td>
+</tr>
+</tbody>
+</table>
+<h2>7. Security</h2>
+<p>TLS everywhere, hashed API keys, encrypted Google tokens, verified payment webhooks, unguessable order and report links, and least-privilege scopes. No system is perfectly secure. Report issues to info@cygnixlabs.com.</p>
+<h2>8. Your choices and rights</h2>
+<p>You can ask for access, correction, export or deletion of your data, or object to processing, by emailing info@cygnixlabs.com from your account email. You can revoke keys and disconnect Google yourself. Depending on where you live (for example the EU/UK under GDPR, California under CCPA/CPRA, or Kuwait's data-protection rules [owner/lawyer: confirm which apply]), you may have more rights, including complaining to a data protection authority.</p>
+<h2>9. International transfers</h2>
+<p>The Service runs on Cloudflare's global network, so data may be processed outside your country. Where required, we rely on appropriate safeguards such as Standard Contractual Clauses.</p>
+<h2>10. Children</h2>
+<p>The Service is for businesses and professionals and is not directed to anyone under 16.</p>
+<h2>11. Changes</h2>
+<p>We post updates here and email account holders about material changes.</p>
+<h2>12. Contact</h2>
+<p>[Operator legal name], [address]. info@cygnixlabs.com</p>
+</div></section></main>
+<footer><div class="wrap"><a href="/privacy.html">Privacy</a><a href="/terms.html">Terms</a><a href="/connect.html">Connect guide</a><a href="/account.html">Account</a><a href="https://skills.cygnixlabs.com">skills.cygnixlabs.com</a><a href="https://github.com/cygnixlabs-cmd/cygnix-seo-mcp">GitHub</a><a href="mailto:info@cygnixlabs.com">info@cygnixlabs.com</a><p>© 2026 Cygnix Labs. Independent product, not affiliated with Google, OpenAI or Anthropic.</p></div></footer>
+</body></html>

@@ -4,10 +4,16 @@
   "description": "Free no-API-key SEO MCP server: keyword clustering, search intent, GSC cannibalization finder, title/meta CTR checker, content briefs. By Cygnix Labs.",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc && chmod +x dist/index.js",
-    "test": "npm run build && node --test test/",
+    "build": "tsc && chmod +x dist/index.js dist/hosted/admin-cli.js",
+    "test": "npm run build && node --test test/*.test.mjs",
     "prepublishOnly": "npm test",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "hosted:dev": "node dist/hosted/node.js",
+    "admin": "node dist/hosted/admin-cli.js",
+    "worker:dev": "npx wrangler@4 dev",
+    "worker:check": "npx wrangler@4 deploy --dry-run --outdir .wrangler/dry-run",
+    "bundle:cpanel": "npm run build && node scripts/build-cpanel-bundle.mjs",
+    "hosted:start": "node app.cjs"
   },
   "keywords": [
     "mcp",
@@ -31,10 +37,12 @@
   "license": "MIT",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.32.1",
+    "pdf-lib": "^1.17.1",
     "zod": "^3.25.76"
   },
   "devDependencies": {
     "@types/node": "^26.6.5",
+    "mysql2": "^3.24.6",
     "typescript": "^5.9.3"
   },
   "mcpName": "io.github.cygnixlabs-cmd/cygnix-seo-mcp",
