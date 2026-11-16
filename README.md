@@ -25,7 +25,7 @@ Built by **[Cygnix Labs](https://cygnixlabs.com)**. Done-for-you SEO + AEO servi
 | Works in | Claude, ChatGPT, Cursor, Claude Code, VS Code | Any stdio MCP client |
 | Tools | 31 hosted (AI-search / AEO readiness, llms.txt, on-page and technical SEO, Core Web Vitals, algorithm updates, Search Console tools, account tools, Agency white-label PDFs). Search Console connect rolling out. | 5 core |
 | Live Search Console | Rolling out (Google consent is in Testing; only listed test users can connect) | – |
-| Price | Free plan (300 calls/mo) available now. Paid plans Pro $15 / Growth $39 / Agency $99, PayPal billing coming soon. | Free |
+| Price | Free plan (300 calls/mo, no card) available now. Paid plans as shown on the [pricing page](https://mcp.cygnixlabs.com/#pricing) (16 Nov 2026): Starter $15/mo, Pro $39/mo, Agency $99/mo (cards also labelled Solo Starter, Teams Pro, Agencies Agency). PayPal subscribe buttons are on the site. | Free |
 
 The startup notice on stderr can be hidden with `CYGNIX_QUIET=1`. It never touches stdout, so the MCP protocol is unaffected.
 
