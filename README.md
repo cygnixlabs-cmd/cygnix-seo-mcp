@@ -53,6 +53,7 @@ Settings → MCP → Add new server, or add to `~/.cursor/mcp.json` (or `.cursor
   }
 }
 ```
+A repo-root `.mcp.json` points Cursor at the hosted server (`https://mcp.cygnixlabs.com/mcp`) so [cursor.directory](https://cursor.directory) can auto-detect it.
 
 ### Claude Code
 ```bash
