@@ -1,6 +1,23 @@
 # Cygnix SEO MCP: free SEO tools for Claude, Cursor & any MCP client
 
-> **New: hosted version, no install.** Use these tools plus 31 hosted SEO and AI-search tools from Claude, ChatGPT, Cursor, Claude Code or VS Code by connecting one URL: `https://mcp.cygnixlabs.com/mcp`. **[Get a free key](https://mcp.cygnixlabs.com/#signup)** (300 calls/month) · [Connect in 2 minutes](https://mcp.cygnixlabs.com/connect). Search Console connect rolling out (the Google consent screen is in Testing mode, so only listed test users can complete Google sign-in). This local package stays free and works exactly as before.
+## ⚡ Hosted plan: no install, 31 tools, free key
+
+**[→ Get a free API key](https://mcp.cygnixlabs.com/#signup)** (300 tool calls/month, no card), then add one URL to Claude, ChatGPT, Cursor, Claude Code or VS Code:
+
+```
+https://mcp.cygnixlabs.com/mcp
+```
+
+| Plan | Price | Tool calls / month |
+|---|---|---|
+| Free | $0 | 300 |
+| Starter | $15/mo | 5,000 |
+| Pro | $39/mo | 25,000 |
+| Agency | $99/mo | 100,000 + white-label PDF reports |
+
+The hosted server includes these 5 tools plus AI-search (AEO) readiness, llms.txt checks, on-page and technical SEO, Core Web Vitals, Google algorithm updates and Search Console tools (Search Console connect is rolling out; the Google consent screen is in Testing mode, so only listed test users can complete Google sign-in). [Connect guide](https://mcp.cygnixlabs.com/connect) · [Pricing](https://mcp.cygnixlabs.com/#pricing) · [Free llms.txt generator](https://mcp.cygnixlabs.com/llms-txt-generator)
+
+This local package stays free, needs no key and works exactly as before.
 
 
 [![npm](https://img.shields.io/npm/v/cygnix-seo-mcp)](https://www.npmjs.com/package/cygnix-seo-mcp) [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
@@ -27,7 +44,7 @@ Built by **[Cygnix Labs](https://cygnixlabs.com)**. Done-for-you SEO + AEO servi
 | Live Search Console | Rolling out (Google consent is in Testing; only listed test users can connect) | – |
 | Price | Free plan (300 calls/mo, no card) available now. Paid plans as shown on the [pricing page](https://mcp.cygnixlabs.com/#pricing) (16 Nov 2026): Starter $15/mo, Pro $39/mo, Agency $99/mo (cards also labelled Solo Starter, Teams Pro, Agencies Agency). PayPal subscribe buttons are on the site. | Free |
 
-The startup notice on stderr can be hidden with `CYGNIX_QUIET=1`. It never touches stdout, so the MCP protocol is unaffected.
+On start the local server prints one line on **stderr** (never stdout, so the MCP protocol is unaffected) with the hosted URL and the free-key link. Hide it with `CYGNIX_QUIET=1`. Each local tool result ends with a short footer pointing at the same hosted URL and free-key link.
 
 ## Install
 
