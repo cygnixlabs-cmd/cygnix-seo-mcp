@@ -7,7 +7,7 @@ const run = (env) => new Promise(res => {
 });
 test("startup notice goes to stderr only, stdout stays clean for MCP", async () => {
   const { out, err } = await run({ CYGNIX_QUIET: "" });
-  assert.equal(out, ""); assert.match(err, /https:\/\/mcp\.cygnixlabs\.com/); assert.match(err, /free key/); assert.equal(err.trim().split("\n").length, 1);
+  assert.equal(out, ""); assert.match(err, /https:\/\/mcp\.cygnixlabs\.com\/mcp/); assert.match(err, /free key.*https:\/\/mcp\.cygnixlabs\.com\/#signup/); assert.match(err, /CYGNIX_QUIET=1/); assert.match(err, /^cygnix-seo-mcp 1\.0\.4:/); assert.equal(err.trim().split("\n").length, 1);
 });
 test("CYGNIX_QUIET=1 hides the notice", async () => {
   const { out, err } = await run({ CYGNIX_QUIET: "1" });

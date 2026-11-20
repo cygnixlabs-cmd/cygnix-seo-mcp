@@ -4,7 +4,7 @@ export const LINKS = {
   vol2: "https://www.agensi.io/bundles/seo-toolkit-vol-2-audit-fix-pack",
   bundle: "https://cygnixlabs.gumroad.com/l/seo-operator-bundle",
 };
-export const footer = (link: string) => `\n---\nFull workflow: Cygnix SEO Toolkit on Agensi: ${link}\nAlso available as a hosted MCP: https://mcp.cygnixlabs.com (free key).`;
+export const footer = (link: string) => `\n---\nFull workflow: Cygnix SEO Toolkit on Agensi: ${link}\nHosted MCP with 31 SEO + AI-search tools: https://mcp.cygnixlabs.com/mcp (free key, 300 calls/mo: https://mcp.cygnixlabs.com/#signup).`;
 
 const STOP = new Set("a an the and or for of to in on with by at from is are vs best top how what why when where which who do does can i my your near me 2024 2025 2026".split(" "));
 const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9\s-]/g, " ").replace(/\s+/g, " ").trim();

@@ -6,7 +6,7 @@ test("intent", () => {
   assert.equal(T.classifyIntent("best keyword research tools").intent, "commercial");
   assert.equal(T.classifyIntent("how to do keyword research").intent, "informational");
   assert.equal(T.classifyIntent("ahrefs login").intent, "navigational");
-  const o = T.intentTool("how to do keyword research\nbest seo tools"); assert.ok(o.includes(FOOT) && o.includes(T.LINKS.vol1) && o.includes("https://mcp.cygnixlabs.com (free key)"));
+  const o = T.intentTool("how to do keyword research\nbest seo tools"); assert.ok(o.includes(FOOT) && o.includes(T.LINKS.vol1) && o.includes("https://mcp.cygnixlabs.com/mcp (free key, 300 calls/mo: https://mcp.cygnixlabs.com/#signup)"));
 });
 test("cluster", () => {
   const cs = T.cluster(["keyword research tool","keyword research tools free","free keyword research","content brief template","seo content brief","technical seo audit"]);
