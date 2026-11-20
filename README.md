@@ -80,6 +80,19 @@ claude mcp add cygnix-seo -- npx -y cygnix-seo-mcp
 ### Other clients (VS Code, Windsurf, Cline, Zed…)
 Any MCP client that supports stdio: command `npx`, args `-y cygnix-seo-mcp`.
 
+### Cline
+Add this to `cline_mcp_settings.json`:
+
+```json
+{
+  "mcpServers": {
+    "cygnix-seo": { "command": "npx", "args": ["-y", "cygnix-seo-mcp"] }
+  }
+}
+```
+
+Or skip the local install and use the hosted server: add `https://mcp.cygnixlabs.com/mcp` with a [free API key](https://mcp.cygnixlabs.com/#signup) (300 tool calls/month, no card).
+
 ### From source
 ```bash
 git clone https://github.com/cygnixlabs-cmd/cygnix-seo-mcp && cd cygnix-seo-mcp
