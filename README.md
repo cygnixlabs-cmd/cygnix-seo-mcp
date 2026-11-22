@@ -1,21 +1,38 @@
 # Cygnix SEO MCP: free SEO tools for Claude, Cursor & any MCP client
 
-## ⚡ Hosted plan: no install, 31 tools, free key
+## ⚡ Hosted plan: no install, 31 tools, free forever
 
-**[→ Get a free API key](https://mcp.cygnixlabs.com/#signup)** (300 tool calls/month, no card), then add one URL to Claude, ChatGPT, Cursor, Claude Code or VS Code:
+**[→ Get a free API key](https://mcp.cygnixlabs.com/?utm_source=github&utm_medium=readme&utm_content=hero_cta#signup)**: 100 tool calls a week, free forever, no card (resets Monday 00:00 UTC).
 
-```
-https://mcp.cygnixlabs.com/mcp
-```
+<!-- GIF PLACEHOLDER: replace with a 30-second screen recording (sign up → paste URL in Claude → first tool result).
+     Suggested file: docs/media/30-second-install.gif (keep under ~5 MB). Remove this comment once the GIF is added. -->
+> 📽️ *30-second install GIF goes here (placeholder; recording not made yet).*
 
-| Plan | Price | Tool calls / month |
+### 30-second install
+1. **Get a key** (10 s): enter your email at [mcp.cygnixlabs.com/#signup](https://mcp.cygnixlabs.com/?utm_source=github&utm_medium=readme&utm_content=install_step1#signup). No card.
+2. **Add one URL** (15 s) in your client:
+   ```
+   https://mcp.cygnixlabs.com/mcp
+   ```
+   - **Claude** (claude.ai / Desktop): Customize → Connectors → + Add → Add custom connector → paste the URL → Sign in now, approve with your key. [Step-by-step](https://mcp.cygnixlabs.com/setup/claude?utm_source=github&utm_medium=readme&utm_content=setup_claude)
+   - **ChatGPT** (developer mode): ChatGPT Plugins → + → Add custom MCP server → paste the URL, Authentication: OAuth → approve with your key. [Step-by-step](https://mcp.cygnixlabs.com/setup/chatgpt?utm_source=github&utm_medium=readme&utm_content=setup_chatgpt)
+   - **Cursor**: one-click install and `mcp.json` snippet. [Step-by-step](https://mcp.cygnixlabs.com/setup/cursor?utm_source=github&utm_medium=readme&utm_content=setup_cursor)
+   - **Cline**: `cline_mcp_settings.json` snippet. [Step-by-step](https://mcp.cygnixlabs.com/setup/cline?utm_source=github&utm_medium=readme&utm_content=setup_cline)
+   - **Claude Code**: `claude mcp add --transport http cygnix-seo https://mcp.cygnixlabs.com/mcp --header "Authorization: Bearer cyg_live_YOUR_KEY"`
+3. **Ask** (5 s): *"Check whether example.com is ready for AI search."*
+
+All setup guides in one place: [mcp.cygnixlabs.com/setup](https://mcp.cygnixlabs.com/setup?utm_source=github&utm_medium=readme&utm_content=setup_all) (also as [Markdown](https://mcp.cygnixlabs.com/setup.md?utm_source=github&utm_medium=readme&utm_content=setup_md) for agents).
+
+| Plan | Price | Tool calls |
 |---|---|---|
-| Free | $0 | 300 |
-| Starter | $15/mo | 5,000 |
-| Pro | $39/mo | 25,000 |
-| Agency | $99/mo | 100,000 + white-label PDF reports |
+| Free | $0, forever | 100 / week |
+| Starter | $15/mo | 5,000 / month |
+| Pro | $39/mo | 25,000 / month |
+| Agency | $99/mo | 100,000 / month + white-label PDF reports |
 
-The hosted server includes these 5 tools plus AI-search (AEO) readiness, llms.txt checks, on-page and technical SEO, Core Web Vitals, Google algorithm updates and Search Console tools (Search Console connect is rolling out; the Google consent screen is in Testing mode, so only listed test users can complete Google sign-in). [Connect guide](https://mcp.cygnixlabs.com/connect) · [Pricing](https://mcp.cygnixlabs.com/#pricing) · [Free llms.txt generator](https://mcp.cygnixlabs.com/llms-txt-generator)
+**Founding 100:** the first 100 paid subscribers keep their monthly price for as long as they stay subscribed. The live seat count is on the [pricing page](https://mcp.cygnixlabs.com/?utm_source=github&utm_medium=readme&utm_content=pricing_founding#pricing).
+
+The hosted server includes these 5 tools plus AI-search (AEO) readiness, llms.txt checks, on-page and technical SEO, Core Web Vitals, Google algorithm updates and Search Console tools (Search Console connect is rolling out; the Google consent screen is in Testing mode, so only listed test users can complete Google sign-in). [Docs](https://mcp.cygnixlabs.com/docs?utm_source=github&utm_medium=readme&utm_content=docs) · [Pricing](https://mcp.cygnixlabs.com/?utm_source=github&utm_medium=readme&utm_content=pricing#pricing) · [Support](https://mcp.cygnixlabs.com/support?utm_source=github&utm_medium=readme&utm_content=support) · [Privacy](https://mcp.cygnixlabs.com/privacy?utm_source=github&utm_medium=readme&utm_content=privacy) · [Free llms.txt generator](https://mcp.cygnixlabs.com/llms-txt-generator?utm_source=github&utm_medium=readme&utm_content=llms_generator)
 
 This local package stays free, needs no key and works exactly as before.
 
@@ -42,7 +59,7 @@ Built by **[Cygnix Labs](https://cygnixlabs.com)**. Done-for-you SEO + AEO servi
 | Works in | Claude, ChatGPT, Cursor, Claude Code, VS Code | Any stdio MCP client |
 | Tools | 31 hosted (AI-search / AEO readiness, llms.txt, on-page and technical SEO, Core Web Vitals, algorithm updates, Search Console tools, account tools, Agency white-label PDFs). Search Console connect rolling out. | 5 core |
 | Live Search Console | Rolling out (Google consent is in Testing; only listed test users can connect) | – |
-| Price | Free plan (300 calls/mo, no card) available now. Paid plans as shown on the [pricing page](https://mcp.cygnixlabs.com/#pricing) (16 Nov 2026): Starter $15/mo, Pro $39/mo, Agency $99/mo (cards also labelled Solo Starter, Teams Pro, Agencies Agency). PayPal subscribe buttons are on the site. | Free |
+| Price | Free forever: 100 tool calls a week, no card. Paid plans as shown on the [pricing page](https://mcp.cygnixlabs.com/?utm_source=github&utm_medium=readme&utm_content=compare_table#pricing): Starter $15/mo, Pro $39/mo, Agency $99/mo, with PayPal subscriptions. | Free |
 
 On start the local server prints one line on **stderr** (never stdout, so the MCP protocol is unaffected) with the hosted URL and the free-key link. Hide it with `CYGNIX_QUIET=1`. Each local tool result ends with a short footer pointing at the same hosted URL and free-key link.
 
@@ -91,7 +108,7 @@ Add this to `cline_mcp_settings.json`:
 }
 ```
 
-Or skip the local install and use the hosted server: add `https://mcp.cygnixlabs.com/mcp` with a [free API key](https://mcp.cygnixlabs.com/#signup) (300 tool calls/month, no card).
+Or skip the local install and use the hosted server: add `https://mcp.cygnixlabs.com/mcp` with a [free API key](https://mcp.cygnixlabs.com/?utm_source=github&utm_medium=readme&utm_content=cline_section#signup) (100 tool calls a week, free forever, no card). [Cline setup guide](https://mcp.cygnixlabs.com/setup/cline?utm_source=github&utm_medium=readme&utm_content=cline_section_guide)
 
 ### From source
 ```bash
