@@ -2,7 +2,7 @@
 
 ## ⚡ Hosted plan: no install, 31 tools, free forever
 
-**[→ Get a free API key](https://mcp.cygnixlabs.com/?utm_source=github&utm_medium=readme&utm_content=hero_cta#signup)**: 100 tool calls a week, free forever, no card (resets Monday 00:00 UTC).
+**[→ Get a free API key](https://mcp.cygnixlabs.com/?utm_source=github&utm_medium=readme&utm_content=hero_cta#signup)**: 50 tool calls a week, free forever, no card (resets Monday 00:00 UTC).
 
 <!-- GIF PLACEHOLDER: replace with a 30-second screen recording (sign up → paste URL in Claude → first tool result).
      Suggested file: docs/media/30-second-install.gif (keep under ~5 MB). Remove this comment once the GIF is added. -->
@@ -25,10 +25,14 @@ All setup guides in one place: [mcp.cygnixlabs.com/setup](https://mcp.cygnixlabs
 
 | Plan | Price | Tool calls |
 |---|---|---|
-| Free | $0, forever | 100 / week |
+| Free | $0, forever | 50 / week |
 | Starter | $15/mo | 5,000 / month |
 | Pro | $39/mo | 25,000 / month |
 | Agency | $99/mo | 100,000 / month + white-label PDF reports |
+| Top-up 500 calls | $5 one-time | 500 calls, never expire, used after plan calls run out |
+| Top-up 2,000 calls | $15 one-time | 2,000 calls, never expire, used after plan calls run out |
+| Top-up 6,000 calls | $39 one-time | 6,000 calls, never expire, used after plan calls run out |
+| Fix-5 Pack | $19 one-time | Top 5 fixes, re-audit and a before/after report, one site |
 
 **Founding 100:** the first 100 paid subscribers keep their monthly price for as long as they stay subscribed. The live seat count is on the [pricing page](https://mcp.cygnixlabs.com/?utm_source=github&utm_medium=readme&utm_content=pricing_founding#pricing).
 
@@ -57,9 +61,9 @@ Built by **[Cygnix Labs](https://cygnixlabs.com)**. Done-for-you SEO + AEO servi
 |---|---|---|
 | Install | None. Paste a URL | `npx -y cygnix-seo-mcp` |
 | Works in | Claude, ChatGPT, Cursor, Claude Code, VS Code | Any stdio MCP client |
-| Tools | 31 hosted (AI-search / AEO readiness, llms.txt, on-page and technical SEO, Core Web Vitals, algorithm updates, Search Console tools, account tools, Agency white-label PDFs). Search Console connect rolling out. | 5 core |
+| Tools | 41 hosted (guided fixes, AI-search / AEO readiness, llms.txt, on-page and technical SEO, Core Web Vitals, algorithm updates, Search Console tools, account tools, Agency white-label PDFs). Search Console connect rolling out. | 5 core |
 | Live Search Console | Rolling out (Google consent is in Testing; only listed test users can connect) | – |
-| Price | Free forever: 100 tool calls a week, no card. Paid plans as shown on the [pricing page](https://mcp.cygnixlabs.com/?utm_source=github&utm_medium=readme&utm_content=compare_table#pricing): Starter $15/mo, Pro $39/mo, Agency $99/mo, with PayPal subscriptions. | Free |
+| Price | Free forever: 50 tool calls a week, no card. Paid plans as shown on the [pricing page](https://mcp.cygnixlabs.com/?utm_source=github&utm_medium=readme&utm_content=compare_table#pricing): Starter $15/mo, Pro $39/mo, Agency $99/mo, with PayPal subscriptions. One-time top-ups ($5 / 500, $15 / 2,000, $39 / 6,000 calls, never expire) and a $19 Fix-5 Pack (top 5 fixes, re-audit, before/after report). | Free |
 
 On start the local server prints one line on **stderr** (never stdout, so the MCP protocol is unaffected) with the hosted URL and the free-key link. Hide it with `CYGNIX_QUIET=1`. Each local tool result ends with a short footer pointing at the same hosted URL and free-key link.
 
@@ -108,7 +112,7 @@ Add this to `cline_mcp_settings.json`:
 }
 ```
 
-Or skip the local install and use the hosted server: add `https://mcp.cygnixlabs.com/mcp` with a [free API key](https://mcp.cygnixlabs.com/?utm_source=github&utm_medium=readme&utm_content=cline_section#signup) (100 tool calls a week, free forever, no card). [Cline setup guide](https://mcp.cygnixlabs.com/setup/cline?utm_source=github&utm_medium=readme&utm_content=cline_section_guide)
+Or skip the local install and use the hosted server: add `https://mcp.cygnixlabs.com/mcp` with a [free API key](https://mcp.cygnixlabs.com/?utm_source=github&utm_medium=readme&utm_content=cline_section#signup) (50 tool calls a week, free forever, no card). [Cline setup guide](https://mcp.cygnixlabs.com/setup/cline?utm_source=github&utm_medium=readme&utm_content=cline_section_guide)
 
 ### From source
 ```bash

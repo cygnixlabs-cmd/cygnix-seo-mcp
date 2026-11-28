@@ -8,12 +8,12 @@
     "source": "github"
   },
   "websiteUrl": "https://mcp.cygnixlabs.com",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "packages": [
     {
       "registryType": "npm",
       "identifier": "cygnix-seo-mcp",
-      "version": "1.0.4",
+      "version": "1.0.5",
       "transport": {
         "type": "stdio"
       }
